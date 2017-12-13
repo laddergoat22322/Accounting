@@ -17,6 +17,8 @@ public class TransactionManager {
 		addCategory("Car");
 		addCategory("Home");
 		addCategory("Games");
+		addCategory("Miscellaneous");
+		addCategory("Going Away");
 		
 		Date now = new Date();
 		//Date test = now;
@@ -24,6 +26,9 @@ public class TransactionManager {
 		addTransaction(10, "test", 0, now);
 		addTransaction(11, "test", 1, now);
 		addTransaction(12, "test", 2, now);
+		addTransaction(55, "test", 0, now);
+		addTransaction(78, "test", 4, now);
+		addTransaction(11, "test", 5, now);
 		System.out.print(new SimpleDateFormat("dd/MM/yyyy").format(allTransactions.get(0).getDate()));
 		
 		System.out.print(allCategories.get(allTransactions.get(0).getCategory()));
