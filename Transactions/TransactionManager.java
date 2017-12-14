@@ -45,17 +45,27 @@ public class TransactionManager {
 		allCategories.add(category);
 	}
 	
-	public String[] exportTransactionsHeaderInformation() {
+	public String[] exportIndividualTransactionHeader() {
 		String[] exportedCategories = new String[4];
 		exportedCategories[0] = "Date";
 		exportedCategories[1] = "Category";
 		exportedCategories[2] = "Description";
 		exportedCategories[3] = "Amount";
 		return exportedCategories;
-		
 	}
 	
-	public String[][] exportTransactionsIndividual() {
+	public String[] exportCategoriesTransactionHeader() {
+		int arraySize = allCategories.size() + 2;
+		String[] exportedCategories = new String[arraySize];
+		exportedCategories[0] = "Date";
+		for (int i = 0; i < allCategories.size(); i++) {
+			exportedCategories[i+1] = allCategories.get(i);
+		}
+		exportedCategories[arraySize-1] = "Total";
+		return exportedCategories;
+	}
+	
+	public String[][] exportAllTransactions_Individual() {
 		int totalTransactions = allTransactions.size();
 		String[][] exportedTransactions = new String[totalTransactions][5];
 		for(int i = 0; i < totalTransactions; i++) {

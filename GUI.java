@@ -59,8 +59,8 @@ public class GUI extends JFrame {
 		frame.setTitle("Accounting Program - By Matthew Janssen");
 		
 		TransactionManager tm = new TransactionManager();
-		String[][] allData = tm.exportTransactionsIndividual();
-		String[] categories = tm.exportTransactionsHeaderInformation();
+		String[][] allData = tm.exportAllTransactions_Individual();
+		String[] categories = tm.exportIndividualTransactionHeader();
 		         
 		JTable table = new JTable(allData,categories);
 		table.setFont(new Font("Tahoma", Font.PLAIN, 15));
