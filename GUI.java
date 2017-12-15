@@ -1,27 +1,11 @@
 import java.awt.EventQueue;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.eclipse.swt.widgets.DateTime;
-
+import Import_Export.Import;
 import Transactions.TransactionManager;
 
-import java.awt.event.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-
-import java.awt.Insets;
 import java.awt.Font;
 
 public class GUI extends JFrame {
@@ -59,6 +43,7 @@ public class GUI extends JFrame {
 		frame.setTitle("Accounting Program - By Matthew Janssen");
 		
 		TransactionManager tm = new TransactionManager();
+		Import newImport = new Import("C:/Users/matth/Downloads/CSVData.csv", "ANZ", tm);
 		String[][] allData = tm.exportAllTransactions_Individual();
 		String[] categories = tm.exportIndividualTransactionHeader();
 		         
