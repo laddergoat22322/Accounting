@@ -38,8 +38,8 @@ public class Import {
 
                 // use comma as separator
                 String[] newImport = line.split(cvsSplitBy);
-                
-                System.out.println(newImport[0] + ", " + newImport[1] + ", " + newImport[2] + ", " + newImport[3] + ", ");
+                Calendar cal = checkDate(newImport[0]);
+                //System.out.println(newImport[0] + ", " + newImport[1] + ", " + newImport[2] + ", " + newImport[3] + ", ");
 
             }
 
@@ -72,6 +72,21 @@ public class Import {
 	
 	
 	
+		private Calendar checkDate(String dateString) {
+			String dayString = dateString.substring(0, 2);
+			int day = Integer.parseInt(dayString);
+			
+			String monthString = dateString.substring(3, 5);
+			int month = Integer.parseInt(monthString);
+			
+			String yearString = dateString.substring(6, 10);
+			int year = Integer.parseInt(yearString);
+			
+			Calendar cal = Calendar.getInstance();
+			cal.set(year, month, day);
+			return null;
+		}
+
 		private void InitialiseDates() throws ParseException{
 		Calendar cal = Calendar.getInstance();
 		cal.setFirstDayOfWeek(Calendar.MONDAY);
