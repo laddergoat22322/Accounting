@@ -1,5 +1,6 @@
 package Transactions;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Transaction {
@@ -7,9 +8,9 @@ public class Transaction {
 	private String description;
 	private int category;
 	private boolean internal;
-	private Date date;
+	private Calendar date;
 	
-	public Transaction(double amount, String description, int category, Date date) {
+	public Transaction(double amount, String description, int category, Calendar date) {
 		this.amount = amount;
 		this.description = description;
 		this.category = category;
@@ -50,10 +51,10 @@ public class Transaction {
 	}
 
 	public Date getDate() {
-		return date;
+		return date.getTime();
 	}
 
-	public void setDate(Date date) {
+	public void setDate(Calendar date) {
 		this.date = date;
 	}
 }

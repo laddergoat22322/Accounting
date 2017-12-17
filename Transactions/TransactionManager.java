@@ -2,6 +2,7 @@ package Transactions;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class TransactionManager {
@@ -20,23 +21,19 @@ public class TransactionManager {
 		addCategory("Miscellaneous");
 		addCategory("Going Away");
 		
-		Date now = new Date();
+		Calendar now = Calendar.getInstance();
 		//Date test = now;
 		//test.setTime(time);
 		addTransaction(10, "test", 0, now);
-		addTransaction(11, "test", 1, now);
-		addTransaction(12, "test", 2, now);
-		addTransaction(55, "test", 0, now);
-		addTransaction(78, "test", 4, now);
-		addTransaction(11, "test", 5, now);
-		System.out.print(new SimpleDateFormat("dd/MM/yyyy").format(allTransactions.get(0).getDate()));
+		//System.out.print(new SimpleDateFormat("dd/MM/yyyy").format(allTransactions.get(0).getTime.getDate()));
+		
 		
 		System.out.print(allCategories.get(allTransactions.get(0).getCategory()));
 		System.out.print(allTransactions.get(0).getDescription());
 		System.out.print(String.valueOf(allTransactions.get(0).getAmount()));
 	}
 	
-	public void addTransaction(double amount, String description, int category, Date date) {
+	public void addTransaction(double amount, String description, int category, Calendar date) {
 		Transaction newTrans = new Transaction(amount, description, category, date);
 		allTransactions.add(newTrans);
 	}
@@ -69,7 +66,8 @@ public class TransactionManager {
 		int totalTransactions = allTransactions.size();
 		String[][] exportedTransactions = new String[totalTransactions][5];
 		for(int i = 0; i < totalTransactions; i++) {
-			exportedTransactions[i][0] = new SimpleDateFormat("dd/MM/yyyy").format(allTransactions.get(i).getDate());
+			Date tempDate = allTransactions.get(i).getDate();
+			exportedTransactions[i][0] = new SimpleDateFormat("dd/MM/yyyy").format(tempDate);
 			exportedTransactions[i][1] = allCategories.get(allTransactions.get(i).getCategory());
 			exportedTransactions[i][2] = allTransactions.get(i).getDescription();
 			exportedTransactions[i][3] = String.valueOf(allTransactions.get(i).getAmount());

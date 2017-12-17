@@ -23,11 +23,11 @@ public class Import {
 		this.fileLoc = location;
 		this.bank = bank;
 		if (this.bank.equals("ANZ")) {
-			importANZ();
+			importANZ(tm);
 		}
 	}
 	
-	private void importANZ() {
+	private void importANZ(TransactionManager tm) {
 		BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
@@ -39,8 +39,9 @@ public class Import {
                 // use comma as separator
                 String[] newImport = line.split(cvsSplitBy);
                 Calendar cal = checkDate(newImport[0]);
-                //System.out.println(newImport[0] + ", " + newImport[1] + ", " + newImport[2] + ", " + newImport[3] + ", ");
-
+                double amount = Double.parseDouble(newImport[1].replace("\"", ""));
+                System.out.println(newImport[0] + ", " + newImport[1] + ", " + newImport[2] + ", " + newImport[3] + ", ");
+                tm.addTransaction(amount, newImport[2], 0, cal);
             }
 
         } catch (FileNotFoundException e) {
@@ -84,7 +85,7 @@ public class Import {
 			
 			Calendar cal = Calendar.getInstance();
 			cal.set(year, month, day);
-			return null;
+			return cal;
 		}
 
 		private void InitialiseDates() throws ParseException{
