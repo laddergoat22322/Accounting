@@ -1,15 +1,23 @@
+package Import_Export;
+/**
+ * @author      Matthew Janssen
+ */
+
 import java.awt.EventQueue;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 
-import Import_Export.Import;
 import Transactions.TransactionManager;
 
 import java.text.ParseException;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
 
-public class GUI extends JFrame {
+public class NewImportGIU extends JFrame {
 	private JFrame frame;
+	private Font defaultFont;
+	private String userName;
 
 	/**
 	 * Launch the application.
@@ -17,7 +25,7 @@ public class GUI extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				GUI window = new GUI();
+				NewImportGIU window = new NewImportGIU();
 			}
 		});
 	}
@@ -26,7 +34,7 @@ public class GUI extends JFrame {
 	 * Create the application.
 	 * @throws ParseException 
 	 */
-	public GUI() {
+	public NewImportGIU() {
 		initialize();
 	}
 
@@ -35,35 +43,44 @@ public class GUI extends JFrame {
 	 * @throws ParseException 
 	 */
 	private void initialize() {
+		
+		//Initialize GUI
 		frame = new JFrame();
 		frame.setSize(1400,900);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(true);
-		frame.setTitle("Accounting Program - By Matthew Janssen");
+		frame.setTitle("Accounting Program - By " + userName);
 		
+		
+		//default font
+		defaultFont = new Font("Tahoma", Font.PLAIN, 15);
+		
+		//Initialize Transaction Manager
 		TransactionManager tm = new TransactionManager();
-		Import newImport = new Import("C:/Users/matth/Downloads/CSVData.csv", "ANZ", tm);
+		new Import("C:/Users/matth/Downloads/CSVData.csv", "ANZ", tm);
 		String[][] allData = tm.exportAllTransactions_Individual();
-		String[] categories = tm.exportIndividualTransactionHeader();
-		         
-		JTable table = new JTable(allData,categories);
-		table.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		table.setRowHeight(20);
+		String[] header = tm.exportIndividualTransactionHeader();
 		
+		
+		//Initialize JComboBox
+		String[] categories = tm.exportCategories();
+		JComboBox<String> combo = new JComboBox<String>(categories);
+		combo.setFont(defaultFont);
+		
+		
+		//Initialize JTable
+		JTable table = new JTable(allData,header);
+		table.setFont(defaultFont);
+		table.setRowHeight(20);
+		TableColumn col = table.getColumnModel().getColumn(1);
+		col.setCellEditor(new DefaultCellEditor(combo));
 		
 		//Set width of columns
 		int rows = table.getColumnCount();
 		table.getColumnModel().getColumn(0).setPreferredWidth(50);
 		for(int i = 1; i < rows; i++) {
 			table.getColumnModel().getColumn(i).setPreferredWidth(200);
-		}
-		
-		//Justify right
-		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-		rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
-		for(int i = 1; i < rows; i++) {
-			table.getColumnModel().getColumn(i).setCellRenderer(rightRenderer);
 		}
 		
 		JScrollPane scrollPane=new JScrollPane(table);    
