@@ -1,3 +1,8 @@
+/**
+ * The Transaction class containing the information of a single transaction.
+ * @author Matthew Janssen
+ */
+
 package Transactions;
 
 import java.util.Calendar;
@@ -9,13 +14,15 @@ public class Transaction {
 	private int category;
 	private boolean internal;
 	private Calendar date;
+	private int bank;
 	
-	public Transaction(double amount, String description, int category, Calendar date) {
+	public Transaction(double amount, String description, int category, Calendar date, int bank) {
 		this.amount = amount;
 		this.description = description;
 		this.category = category;
 		this.date = date;
 		this.internal = false;
+		this.bank = bank;
 	}
 	
 	public double getAmount() {

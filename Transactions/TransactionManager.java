@@ -9,10 +9,12 @@ public class TransactionManager {
 	
 	private ArrayList<Transaction> allTransactions;
 	private ArrayList<String> allCategories;
+	private ArrayList<String> allBanks; 
 	
 	public TransactionManager() {
 		allTransactions = new ArrayList<Transaction>();
 		allCategories = new ArrayList<String>();
+		allBanks = new ArrayList<String>();
 		
 		addCategory("Food");
 		addCategory("Car");
@@ -20,26 +22,27 @@ public class TransactionManager {
 		addCategory("Games");
 		addCategory("Miscellaneous");
 		addCategory("Going Away");
-		
-		Calendar now = Calendar.getInstance();
-		//Date test = now;
-		//test.setTime(time);
-		addTransaction(10, "test", 0, now);
-		//System.out.print(new SimpleDateFormat("dd/MM/yyyy").format(allTransactions.get(0).getTime.getDate()));
-		
-		
-		System.out.print(allCategories.get(allTransactions.get(0).getCategory()));
-		System.out.print(allTransactions.get(0).getDescription());
-		System.out.print(String.valueOf(allTransactions.get(0).getAmount()));
+		allBanks.add("ANZ Bank");
 	}
 	
-	public void addTransaction(double amount, String description, int category, Calendar date) {
-		Transaction newTrans = new Transaction(amount, description, category, date);
+	public boolean addTransaction(double amount, String description, int category, Calendar date, int bank) {
+		if(category < 0 || category >= allCategories.size()) {
+			return false;
+		}
+		Transaction newTrans = new Transaction(amount, description, category, date, bank);
 		allTransactions.add(newTrans);
+		return true;
 	}
 	
-	public void addCategory(String category) {
+	public boolean addCategory(String category) {
+		//check category doesn't exist already
+		for(int i = 0; i < allCategories.size(); i++) {
+			if(category.equals(allCategories.get(i))) {
+				return false;
+			}
+		}
 		allCategories.add(category);
+		return true;
 	}
 	
 	public String[] exportIndividualTransactionHeader() {
@@ -62,15 +65,26 @@ public class TransactionManager {
 		return exportedCategories;
 	}
 	
+	public String[] exportCategories() {
+		int arraySize = allCategories.size();
+		String[] exportedCategories = new String[arraySize];
+		for (int i = 0; i < allCategories.size(); i++) {
+			exportedCategories[i] = allCategories.get(i);
+		}
+		return exportedCategories;
+	}
+	
 	public String[][] exportAllTransactions_Individual() {
 		int totalTransactions = allTransactions.size();
 		String[][] exportedTransactions = new String[totalTransactions][5];
 		for(int i = 0; i < totalTransactions; i++) {
 			Date tempDate = allTransactions.get(i).getDate();
 			exportedTransactions[i][0] = new SimpleDateFormat("dd/MM/yyyy").format(tempDate);
-			exportedTransactions[i][1] = allCategories.get(allTransactions.get(i).getCategory());
 			exportedTransactions[i][2] = allTransactions.get(i).getDescription();
 			exportedTransactions[i][3] = String.valueOf(allTransactions.get(i).getAmount());
+			int categoryIndex = allTransactions.get(i).getCategory();
+			if (categoryIndex < 0) exportedTransactions[i][1] = "Choose...";
+			else exportedTransactions[i][1] = allCategories.get(categoryIndex);
 		}
 		return exportedTransactions;
 	}

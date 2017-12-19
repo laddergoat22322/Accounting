@@ -1,3 +1,10 @@
+/**
+ * The Import class imports a list of transactions provided through the 
+ * file location and type of bank that has generated the file, commonly
+ * CSV files.
+ * @author Matthew Janssen
+ */
+
 package Import_Export;
 
 import java.io.BufferedReader;
@@ -14,20 +21,18 @@ import Transactions.Transaction;
 import Transactions.TransactionManager;
 
 public class Import {
-	private ArrayList<Transaction> transactions;
 	private String fileLoc;
 	private String bank;
 	
 	public Import(String location, String bank, TransactionManager tm) {
-		transactions = new ArrayList<>();
 		this.fileLoc = location;
 		this.bank = bank;
 		if (this.bank.equals("ANZ")) {
-			importANZ(tm);
+			importANZ(tm, 0);
 		}
 	}
 	
-	private void importANZ(TransactionManager tm) {
+	private void importANZ(TransactionManager tm, int bankID) {
 		BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
@@ -41,7 +46,7 @@ public class Import {
                 Calendar cal = checkDate(newImport[0]);
                 double amount = Double.parseDouble(newImport[1].replace("\"", ""));
                 System.out.println(newImport[0] + ", " + newImport[1] + ", " + newImport[2] + ", " + newImport[3] + ", ");
-                tm.addTransaction(amount, newImport[2], 0, cal);
+                tm.addTransaction(amount, newImport[2], 0, cal, bankID);
             }
 
         } catch (FileNotFoundException e) {
@@ -74,14 +79,13 @@ public class Import {
 	
 	
 		private Calendar checkDate(String dateString) {
-			String dayString = dateString.substring(0, 2);
-			int day = Integer.parseInt(dayString);
+			String[] dateCheck = dateString.split("/");
 			
-			String monthString = dateString.substring(3, 5);
-			int month = Integer.parseInt(monthString);
+			int day = Integer.parseInt(dateCheck[0]);
 			
-			String yearString = dateString.substring(6, 10);
-			int year = Integer.parseInt(yearString);
+			int month = Integer.parseInt(dateCheck[1]);
+			
+			int year = Integer.parseInt(dateCheck[2]);
 			
 			Calendar cal = Calendar.getInstance();
 			cal.set(year, month, day);
