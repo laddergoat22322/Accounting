@@ -5,16 +5,14 @@ package Import_Export;
 
 import java.awt.EventQueue;
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import Transactions.TransactionManager;
 
 import java.text.ParseException;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
 
-public class NewImportGIU extends JFrame {
+public class NewImportGIU{
 	private JFrame frame;
 	private Font defaultFont;
 	private String userName;
@@ -25,7 +23,7 @@ public class NewImportGIU extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				NewImportGIU window = new NewImportGIU();
+				new NewImportGIU();
 			}
 		});
 	}
@@ -58,13 +56,13 @@ public class NewImportGIU extends JFrame {
 		
 		//Initialize Transaction Manager
 		TransactionManager tm = new TransactionManager();
-		new Import("C:/Users/matth/Downloads/CSVData.csv", "ANZ", tm);
-		String[][] allData = tm.exportAllTransactions_Individual();
-		String[] header = tm.exportIndividualTransactionHeader();
+		new Import("C:/Users/matth/Downloads/CSVData.csv", 0);
+		String[][] allData = tm.getAllTransactionsIndividually();
+		String[] header = tm.getIndividualTransactionHeader();
 		
 		
 		//Initialize JComboBox
-		String[] categories = tm.exportCategories();
+		String[] categories = tm.getCategories();
 		JComboBox<String> combo = new JComboBox<String>(categories);
 		combo.setFont(defaultFont);
 		

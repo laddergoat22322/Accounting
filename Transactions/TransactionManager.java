@@ -7,11 +7,20 @@ import java.util.Date;
 
 public class TransactionManager {
 	
-	private ArrayList<Transaction> allTransactions;
-	private ArrayList<String> allCategories;
-	private ArrayList<String> allBanks; 
+	private static TransactionManager tm;
+	private static ArrayList<Transaction> allTransactions;
+	private static ArrayList<String> allCategories;
+	private static ArrayList<String> allBanks; 
 	
-	public TransactionManager() {
+	public synchronized static TransactionManager getInstance() {
+		if (tm == null) {
+			tm = new TransactionManager();
+			setupClass();
+		}
+		return tm;
+	}
+	
+	private static void setupClass() {
 		allTransactions = new ArrayList<Transaction>();
 		allCategories = new ArrayList<String>();
 		allBanks = new ArrayList<String>();
@@ -24,7 +33,7 @@ public class TransactionManager {
 		addCategory("Going Away");
 		allBanks.add("ANZ Bank");
 	}
-	
+
 	public boolean addTransaction(double amount, String description, int category, Calendar date, int bank) {
 		if(category < 0 || category >= allCategories.size()) {
 			return false;
@@ -34,7 +43,14 @@ public class TransactionManager {
 		return true;
 	}
 	
-	public boolean addCategory(String category) {
+	public String getBankName(int bankID) {
+		if (bankID < 0 || bankID > allBanks.size()) {
+			return null;
+		}
+		return allBanks.get(bankID);
+	}
+	
+	public static boolean addCategory(String category) {
 		//check category doesn't exist already
 		for(int i = 0; i < allCategories.size(); i++) {
 			if(category.equals(allCategories.get(i))) {
@@ -45,7 +61,7 @@ public class TransactionManager {
 		return true;
 	}
 	
-	public String[] exportIndividualTransactionHeader() {
+	public String[] getIndividualTransactionHeader() {
 		String[] exportedCategories = new String[4];
 		exportedCategories[0] = "Date";
 		exportedCategories[1] = "Category";
@@ -54,7 +70,7 @@ public class TransactionManager {
 		return exportedCategories;
 	}
 	
-	public String[] exportCategoriesTransactionHeader() {
+	public String[] getCategoriesTransactionHeader() {
 		int arraySize = allCategories.size() + 2;
 		String[] exportedCategories = new String[arraySize];
 		exportedCategories[0] = "Date";
@@ -65,7 +81,7 @@ public class TransactionManager {
 		return exportedCategories;
 	}
 	
-	public String[] exportCategories() {
+	public String[] getCategories() {
 		int arraySize = allCategories.size();
 		String[] exportedCategories = new String[arraySize];
 		for (int i = 0; i < allCategories.size(); i++) {
@@ -74,7 +90,7 @@ public class TransactionManager {
 		return exportedCategories;
 	}
 	
-	public String[][] exportAllTransactions_Individual() {
+	public String[][] getAllTransactionsIndividually() {
 		int totalTransactions = allTransactions.size();
 		String[][] exportedTransactions = new String[totalTransactions][5];
 		for(int i = 0; i < totalTransactions; i++) {

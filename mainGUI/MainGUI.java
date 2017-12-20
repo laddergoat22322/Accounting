@@ -1,3 +1,4 @@
+package mainGUI;
 /**
  * @author      Matthew Janssen
  */
@@ -8,27 +9,21 @@ import java.awt.Font;
 
 import javax.swing.*;
 
+import Import_Export.SelectImportTypeGUI;
+import Transactions.TransactionManager;
+
 import java.text.ParseException;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainGUI extends JFrame {
 	private JFrame frame;
 	private JPanel thePanel;
 	private String userName;
-	JMenu menu, submenu;  
-    JMenuItem i1, i2, i3, i4, i5;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				//new FirstRunGUI();
-				new MainGUI("Testing");
-			}
-		});
-	}
+	private JMenu menu;  
+    private JMenuItem i1, i2;
+    private TransactionManager tm;
 
 	/**
 	 * Create the application.
@@ -36,6 +31,7 @@ public class MainGUI extends JFrame {
 	 */
 	public MainGUI(String uName) {
 		this.userName = uName;
+		this.tm = new TransactionManager();
 		initialize();
 	}
 
@@ -51,8 +47,6 @@ public class MainGUI extends JFrame {
 		
 		createMenu();
 		
-		createPanelComponents();
-		
 		
 		
 		frame.add(thePanel);
@@ -64,7 +58,12 @@ public class MainGUI extends JFrame {
           menu=new JMenu("File"); 
           menu.setPreferredSize(new Dimension(80, 30));
           menu.setFont(new Font("Tahoma", Font.PLAIN, 18));
-          i1 = createMenuItem("Import"); 
+          i1 = createMenuItem("Import");
+          i1.addActionListener(new ActionListener() {
+        	  public void actionPerformed(ActionEvent e) {
+        		  new SelectImportTypeGUI();
+        	  }
+          });;
           i2 = createMenuItem("Settings");
           menu.add(i1); menu.add(i2);
           mb.add(menu);  
@@ -77,10 +76,5 @@ public class MainGUI extends JFrame {
         item.setFont(new Font("Tahoma", Font.PLAIN, 15));
         item.setPreferredSize(new Dimension(120, 30));
         return item;
-	}
-
-	private void createPanelComponents() {
-		// TODO Auto-generated method stub
-		
 	}
 }

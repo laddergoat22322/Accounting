@@ -11,23 +11,19 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-
-import Transactions.Transaction;
 import Transactions.TransactionManager;
 
 public class Import {
 	private String fileLoc;
-	private String bank;
+	private int bankID;
+	private TransactionManager tm;
 	
-	public Import(String location, String bank, TransactionManager tm) {
+	public Import(String location, int bankID) {
 		this.fileLoc = location;
-		this.bank = bank;
-		if (this.bank.equals("ANZ")) {
+		this.bankID = bankID;
+		if (this.bankID == 0) {
+			tm = TransactionManager.getInstance();
 			importANZ(tm, 0);
 		}
 	}
@@ -92,7 +88,7 @@ public class Import {
 			return cal;
 		}
 
-		private void InitialiseDates() throws ParseException{
+/*		private void InitialiseDates() throws ParseException{
 		Calendar cal = Calendar.getInstance();
 		cal.setFirstDayOfWeek(Calendar.MONDAY);
 	    String start = "25/12/2016";
@@ -118,4 +114,5 @@ public class Import {
 		allData[i][0] = new SimpleDateFormat("dd/MM/yyyy").format(mondayDates.get(i));
 	    }
 	}
+	*/
 }
