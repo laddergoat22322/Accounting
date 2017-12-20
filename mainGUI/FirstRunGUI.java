@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -92,10 +93,11 @@ public class FirstRunGUI extends JFrame {
 		enterBut.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (tf.getText().equals("") || 
-						tf.getText().equals("Please enter your name here")) {
-					tf.setText("Please enter your name here");
-					tf.setForeground(Color.RED);
+				if (tf.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(frame,
+						    "Please enter your name before continuing",
+						    "Incomplete",
+						    JOptionPane.ERROR_MESSAGE);
 				}
 				else {
 					frame.dispose();

@@ -10,7 +10,7 @@ public class TransactionManager {
 	private static TransactionManager tm;
 	private static ArrayList<Transaction> allTransactions;
 	private static ArrayList<String> allCategories;
-	private static ArrayList<String> allBanks; 
+	private static ArrayList<String> allBanks;
 	
 	public synchronized static TransactionManager getInstance() {
 		if (tm == null) {
@@ -31,7 +31,7 @@ public class TransactionManager {
 		addCategory("Games");
 		addCategory("Miscellaneous");
 		addCategory("Going Away");
-		allBanks.add("ANZ Bank");
+		allBanks.add("ANZ");
 	}
 
 	public boolean addTransaction(double amount, String description, int category, Calendar date, int bank) {
@@ -103,5 +103,14 @@ public class TransactionManager {
 			else exportedTransactions[i][1] = allCategories.get(categoryIndex);
 		}
 		return exportedTransactions;
+	}
+
+	public String[] getAllBanks() {
+		int numBanks = allBanks.size();
+		String[] exportedBanks = new String[numBanks];
+		for (int i = 0; i < numBanks; i++) {
+			exportedBanks[i] = allBanks.get(i);
+		}
+		return exportedBanks;
 	}
 }
