@@ -68,7 +68,12 @@ public class NewImportGIU{
 		
 		
 		//Initialize JTable
-		JTable table = new JTable(data,header);
+		JTable table = new JTable(data,header){
+			  public boolean isCellEditable(int row,int column){
+				    if(column < 1 || column > 1) return false;
+				    return true;
+			  }
+		};
 		table.setFont(defaultFont);
 		table.setRowHeight(20);
 		TableColumn col = table.getColumnModel().getColumn(1);
