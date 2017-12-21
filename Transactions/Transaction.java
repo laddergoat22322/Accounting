@@ -9,21 +9,24 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Transaction {
-	private String description;
-	private boolean internal;  //TODO
 	private Calendar date;
-	private int bankID;        //TODO
-	private int bankNumberID;  //TODO
+	private String description;
+	private int bankID;
+	private int accountID;
 	private int categoryID;
-	private double amount = 0;
+	private double amount;
+	private boolean internal;
+	private boolean newImport;
 	
-	public Transaction(double amount, String description, int category, Calendar date, int bank) {
+	public Transaction(double amount, String description, int category, Calendar date, int bank, int accountID) {
 		this.amount = amount;
 		this.description = description;
 		this.categoryID = category;
 		this.date = date;
 		this.internal = false;
-		this.setBankID(bank);
+		this.bankID = bank;
+		this.accountID = accountID;
+		this.newImport = true;
 	}
 	
 	public double getAmount() {
@@ -70,15 +73,7 @@ public class Transaction {
 		return bankID;
 	}
 
-	public void setBankID(int bankID) {
-		this.bankID = bankID;
-	}
-
-	public int getBankNumberID() {
-		return bankNumberID;
-	}
-
-	public void setBankNumberID(int bankNumberID) {
-		this.bankNumberID = bankNumberID;
+	public int getAccountID() {
+		return accountID;
 	}
 }

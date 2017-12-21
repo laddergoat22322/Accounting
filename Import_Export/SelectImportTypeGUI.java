@@ -28,6 +28,8 @@ public class SelectImportTypeGUI {
 	private JPanel thePanel;
 	private int bankID;
 	private int fileType;
+	private String fileLoc;
+	private int accountID;
 	private TransactionManager tm;
 	
 	public SelectImportTypeGUI() {
@@ -62,8 +64,9 @@ public class SelectImportTypeGUI {
 	
 	private void createPanelComponents() {
 		GridBagConstraints c = new GridBagConstraints();
-		
 		Font font = new Font("Tahoma", Font.PLAIN, 15);
+		String[] accounts = tm.getAccounts(0);
+		JComboBox<String> cb2 = new JComboBox<String>(accounts);
 		
 		c.gridx = 1;
 		c.gridy = 1;
@@ -80,13 +83,13 @@ public class SelectImportTypeGUI {
 		JLabel bankLabel = new JLabel("Bank");
 		bankLabel.setFont(font);
 		c.gridwidth = 1;
-		c.gridy = 2;
+		c.gridy++;
 		c.ipadx = 20;
 		c.anchor = GridBagConstraints.EAST;
 		thePanel.add(bankLabel, c);
 		
 		String[] banks = tm.getAllBanks();
-		JComboBox cb1 = new JComboBox<String>(banks);
+		JComboBox<String> cb1 = new JComboBox<String>(banks);
 		Dimension preferredSize = cb1.getPreferredSize();
 	    preferredSize.height = 30;
 	    preferredSize.width = 450;
@@ -95,12 +98,39 @@ public class SelectImportTypeGUI {
 		c.ipadx = 0;
 		c.gridx = 2;
 		c.anchor = GridBagConstraints.WEST;
+		cb1.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String[] newAccounts = tm.getAccounts(cb1.getSelectedIndex());
+				cb2.removeAllItems();
+				for (String account : newAccounts) {
+					cb2.addItem(account);
+				}
+			}
+			
+		});
 		thePanel.add(cb1, c);
+		
+		JLabel accountLabel = new JLabel("Account");
+		accountLabel.setFont(font);
+		c.gridx = 1;
+		c.gridy++;
+		c.ipadx = 20;
+		c.anchor = GridBagConstraints.EAST;
+		thePanel.add(accountLabel, c);
+		
+	    cb2.setPreferredSize(preferredSize);
+		cb2.setFont(font);
+		c.ipadx = 0;
+		c.gridx = 2;
+		c.anchor = GridBagConstraints.WEST;
+		thePanel.add(cb2, c);
 		
 		JLabel fileLabel = new JLabel("File Location");
 		fileLabel.setFont(font);
 		c.gridx = 1;
-		c.gridy = 3;
+		c.gridy++;
 		c.ipadx = 20;
 		c.anchor = GridBagConstraints.EAST;
 		thePanel.add(fileLabel, c);
@@ -108,7 +138,7 @@ public class SelectImportTypeGUI {
 		JTextField tf = new JTextField();
 	    tf.setPreferredSize(preferredSize);
 		tf.setFont(font);
-		c.gridx = 2;
+		c.gridx++;
 		c.ipadx = 0;
 		c.anchor = GridBagConstraints.WEST;
 		thePanel.add(tf, c);
@@ -136,7 +166,7 @@ public class SelectImportTypeGUI {
 		
 		JButton enterButton = new JButton("Done");
 		enterButton.setPreferredSize(new Dimension(120, 45));
-		c.gridy = 4;
+		c.gridy++;
 		c.gridx = 1;
 		c.ipadx = 0;
 		c.anchor = GridBagConstraints.CENTER;
@@ -152,6 +182,15 @@ public class SelectImportTypeGUI {
 						    "The file chosen cannot be imported",
 						    "Incorrect File",
 						    JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					bankID = cb1.getSelectedIndex();
+					accountID = cb2.getSelectedIndex();
+					fileLoc = tf.getText();
+					
+					NewImport im = NewImport.getInstance();
+					im.newSetup(bankID, accountID, fileLoc);
+					new NewImportGIU();
 				}
 				
 			}

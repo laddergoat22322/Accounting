@@ -11,19 +11,23 @@ public class TransactionManager {
 	private static ArrayList<Transaction> allTransactions;
 	private static ArrayList<String> allCategories;
 	private static ArrayList<String> allBanks;
+	private static ArrayList<ArrayList<String>> allAccounts;
 	
 	public synchronized static TransactionManager getInstance() {
 		if (tm == null) {
 			tm = new TransactionManager();
-			setupClass();
+			setup();
 		}
 		return tm;
 	}
 	
-	private static void setupClass() {
+	private static void setup() {
 		allTransactions = new ArrayList<Transaction>();
 		allCategories = new ArrayList<String>();
 		allBanks = new ArrayList<String>();
+		allAccounts = new ArrayList<ArrayList<String>>();
+		allAccounts.add(new ArrayList<String>());
+		allAccounts.add(new ArrayList<String>());
 		
 		addCategory("Food");
 		addCategory("Car");
@@ -32,13 +36,20 @@ public class TransactionManager {
 		addCategory("Miscellaneous");
 		addCategory("Going Away");
 		allBanks.add("ANZ");
+		allBanks.add("Commonwealth");
+		allAccounts.get(0).add("Spendings");
+		allAccounts.get(0).add("Low Interest");
+		allAccounts.get(0).add("High Interest");
+		allAccounts.get(0).add("Credit Card");
+		allAccounts.get(1).add("Spending");
+		allAccounts.get(1).add("Low Interest");
 	}
 
-	public boolean addTransaction(double amount, String description, int category, Calendar date, int bank) {
+	public boolean addTransaction(double amount, String description, int category, Calendar date, int bank, int account) {
 		if(category < 0 || category >= allCategories.size()) {
 			return false;
 		}
-		Transaction newTrans = new Transaction(amount, description, category, date, bank);
+		Transaction newTrans = new Transaction(amount, description, category, date, bank, account);
 		allTransactions.add(newTrans);
 		return true;
 	}
@@ -90,7 +101,7 @@ public class TransactionManager {
 		return exportedCategories;
 	}
 	
-	public String[][] getAllTransactionsIndividually() {
+	public String[][] getAllNewTransactions() {
 		int totalTransactions = allTransactions.size();
 		String[][] exportedTransactions = new String[totalTransactions][5];
 		for(int i = 0; i < totalTransactions; i++) {
@@ -107,10 +118,21 @@ public class TransactionManager {
 
 	public String[] getAllBanks() {
 		int numBanks = allBanks.size();
-		String[] exportedBanks = new String[numBanks];
+		String[] banks = new String[numBanks];
 		for (int i = 0; i < numBanks; i++) {
-			exportedBanks[i] = allBanks.get(i);
+			banks[i] = allBanks.get(i);
 		}
-		return exportedBanks;
+		return banks;
 	}
+
+
+	public String[] getAccounts(int bankID) {
+		int numAccounts = allAccounts.get(bankID).size();
+		String[] accounts = new String[numAccounts];
+		for (int i = 0; i < numAccounts; i++) {
+			accounts[i] = allAccounts.get(bankID).get(i);
+		}
+		return accounts;
+	}
+
 }

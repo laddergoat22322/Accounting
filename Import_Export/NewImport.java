@@ -14,21 +14,41 @@ import java.io.IOException;
 import java.util.Calendar;
 import Transactions.TransactionManager;
 
-public class Import {
-	private String fileLoc;
-	private int bankID;
-	private TransactionManager tm;
+public class NewImport {
+	private static String fileLoc;
+	private static int bankID;
+	private static int accountID;
+	private static TransactionManager tm;
+	private static NewImport newImport;
 	
-	public Import(String location, int bankID) {
-		this.fileLoc = location;
-		this.bankID = bankID;
-		if (this.bankID == 0) {
-			tm = TransactionManager.getInstance();
-			importANZ(tm, 0);
+	public synchronized static NewImport getInstance() {
+		if (newImport == null) {
+			newImport = new NewImport();
+			firstSetup();
 		}
+		return newImport;
 	}
 	
-	private void importANZ(TransactionManager tm, int bankID) {
+	private static void firstSetup() {
+		fileLoc = null;
+		bankID = -1;
+		accountID = -1;
+		tm = null;
+	}
+	
+	public static void newSetup(int bank, int account, String loc) {
+		bankID = bank;
+		accountID = account;
+		fileLoc = loc;
+		
+		switch (bank) {
+		case 0:
+			importANZ();
+		}
+		
+	}
+
+	private static void importANZ() {
 		BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
@@ -41,8 +61,9 @@ public class Import {
                 String[] newImport = line.split(cvsSplitBy);
                 Calendar cal = checkDate(newImport[0]);
                 double amount = Double.parseDouble(newImport[1].replace("\"", ""));
-                System.out.println(newImport[0] + ", " + newImport[1] + ", " + newImport[2] + ", " + newImport[3] + ", ");
-                tm.addTransaction(amount, newImport[2], 0, cal, bankID);
+                System.out.println(newImport[0] + ", " + newImport[1] + ", " + newImport[2] + ", " + newImport[3]);
+                tm = TransactionManager.getInstance();
+                tm.addTransaction(amount, newImport[2], 0, cal, bankID, accountID);
             }
 
         } catch (FileNotFoundException e) {
@@ -60,21 +81,7 @@ public class Import {
         }
 	}
 	
-	
-		
-		
-		
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-		private Calendar checkDate(String dateString) {
+		private static Calendar checkDate(String dateString) {
 			String[] dateCheck = dateString.split("/");
 			
 			int day = Integer.parseInt(dateCheck[0]);

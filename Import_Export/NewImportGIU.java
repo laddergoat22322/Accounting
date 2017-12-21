@@ -16,6 +16,7 @@ public class NewImportGIU{
 	private JFrame frame;
 	private Font defaultFont;
 	private String userName;
+	private String uName;
 
 	/**
 	 * Launch the application.
@@ -55,9 +56,8 @@ public class NewImportGIU{
 		defaultFont = new Font("Tahoma", Font.PLAIN, 15);
 		
 		//Initialize Transaction Manager
-		TransactionManager tm = new TransactionManager();
-		new Import("C:/Users/matth/Downloads/CSVData.csv", 0);
-		String[][] allData = tm.getAllTransactionsIndividually();
+		TransactionManager tm = TransactionManager.getInstance();
+		String[][] data = tm.getAllNewTransactions();
 		String[] header = tm.getIndividualTransactionHeader();
 		
 		
@@ -68,7 +68,7 @@ public class NewImportGIU{
 		
 		
 		//Initialize JTable
-		JTable table = new JTable(allData,header);
+		JTable table = new JTable(data,header);
 		table.setFont(defaultFont);
 		table.setRowHeight(20);
 		TableColumn col = table.getColumnModel().getColumn(1);
