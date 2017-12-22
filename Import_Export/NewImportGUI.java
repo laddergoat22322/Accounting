@@ -12,11 +12,12 @@ import Transactions.TransactionManager;
 import java.text.ParseException;
 import java.awt.Font;
 
-public class NewImportGIU{
+public class NewImportGUI{
 	private JFrame frame;
 	private Font defaultFont;
 	private String userName;
 	private String uName;
+	private TransactionManager tm;
 
 	/**
 	 * Launch the application.
@@ -24,7 +25,7 @@ public class NewImportGIU{
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new NewImportGIU();
+				new NewImportGUI();
 			}
 		});
 	}
@@ -33,7 +34,7 @@ public class NewImportGIU{
 	 * Create the application.
 	 * @throws ParseException 
 	 */
-	public NewImportGIU() {
+	public NewImportGUI() {
 		initialize();
 	}
 
@@ -43,20 +44,21 @@ public class NewImportGIU{
 	 */
 	private void initialize() {
 		
+		//Initialize Transaction Manager
+		this.tm = TransactionManager.getInstance();
+		
 		//Initialize GUI
 		frame = new JFrame();
 		frame.setSize(1400,900);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(true);
-		frame.setTitle("Accounting Program - By " + userName);
+		frame.setTitle("Accounting Program - By " + tm.getUserName());
 		
 		
 		//default font
 		defaultFont = new Font("Tahoma", Font.PLAIN, 15);
 		
-		//Initialize Transaction Manager
-		TransactionManager tm = TransactionManager.getInstance();
 		String[][] data = tm.getAllNewTransactions();
 		String[] header = tm.getIndividualTransactionHeader();
 		

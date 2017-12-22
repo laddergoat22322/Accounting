@@ -12,6 +12,7 @@ public class TransactionManager {
 	private static ArrayList<String> allCategories;
 	private static ArrayList<String> allBanks;
 	private static ArrayList<ArrayList<String>> allAccounts;
+	private static String uName;
 	
 	public synchronized static TransactionManager getInstance() {
 		if (tm == null) {
@@ -45,8 +46,17 @@ public class TransactionManager {
 		allAccounts.get(1).add("Low Interest");
 	}
 
+
+	public String getUserName(){
+		return uName;
+	}
+	
+	public void setUserName(String name){
+		this.uName = name;
+	}
+
 	public boolean addTransaction(double amount, String description, int category, Calendar date, int bank, int account) {
-		if(category < 0 || category >= allCategories.size()) {
+		if(category < -1 || category >= allCategories.size()) {
 			return false;
 		}
 		Transaction newTrans = new Transaction(amount, description, category, date, bank, account);
@@ -105,13 +115,15 @@ public class TransactionManager {
 		int totalTransactions = allTransactions.size();
 		String[][] exportedTransactions = new String[totalTransactions][5];
 		for(int i = 0; i < totalTransactions; i++) {
-			Date tempDate = allTransactions.get(i).getDate();
-			exportedTransactions[i][0] = new SimpleDateFormat("dd/MM/yyyy").format(tempDate);
-			exportedTransactions[i][2] = allTransactions.get(i).getDescription();
-			exportedTransactions[i][3] = String.valueOf(allTransactions.get(i).getAmount());
-			int categoryIndex = allTransactions.get(i).getCategory();
-			if (categoryIndex < 0) exportedTransactions[i][1] = "Choose...";
-			else exportedTransactions[i][1] = allCategories.get(categoryIndex);
+			if (allTransactions.get(i).isNewImport()) {
+				Date tempDate = allTransactions.get(i).getDate();
+				exportedTransactions[i][0] = new SimpleDateFormat("dd/MM/yyyy").format(tempDate);
+				exportedTransactions[i][2] = allTransactions.get(i).getDescription();
+				exportedTransactions[i][3] = String.valueOf(allTransactions.get(i).getAmount());
+				int categoryIndex = allTransactions.get(i).getCategory();
+				if (categoryIndex < 0) exportedTransactions[i][1] = "Choose...";
+				else exportedTransactions[i][1] = allCategories.get(categoryIndex);
+			}
 		}
 		return exportedTransactions;
 	}

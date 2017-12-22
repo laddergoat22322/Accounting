@@ -9,7 +9,7 @@ import java.awt.Font;
 
 import javax.swing.*;
 
-import Import_Export.SelectImportTypeGUI;
+import Import_Export.SelectImportGUI;
 import Transactions.TransactionManager;
 
 import java.text.ParseException;
@@ -20,7 +20,6 @@ import java.awt.event.ActionListener;
 public class MainGUI extends JFrame {
 	private JFrame frame;
 	private JPanel thePanel;
-	private String userName;
 	private JMenu menu;  
     private JMenuItem i1, i2;
     private TransactionManager tm;
@@ -30,8 +29,8 @@ public class MainGUI extends JFrame {
 	 * @throws ParseException 
 	 */
 	public MainGUI(String uName) {
-		this.userName = uName;
 		this.tm = new TransactionManager();
+		tm.setUserName(uName);
 		initialize();
 	}
 
@@ -40,7 +39,7 @@ public class MainGUI extends JFrame {
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(true);
-		frame.setTitle(userName + "'s Accounting Program");
+		frame.setTitle(tm.getUserName() + "'s Accounting Program");
 		
 		thePanel = new JPanel();
 		thePanel.setLayout(new GridBagLayout());
@@ -61,7 +60,7 @@ public class MainGUI extends JFrame {
           i1 = createMenuItem("Import");
           i1.addActionListener(new ActionListener() {
         	  public void actionPerformed(ActionEvent e) {
-        		  new SelectImportTypeGUI();
+        		  new SelectImportGUI();
         	  }
           });;
           i2 = createMenuItem("Settings");

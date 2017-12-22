@@ -15,55 +15,44 @@ import java.util.Calendar;
 import Transactions.TransactionManager;
 
 public class NewImport {
-	private static String fileLoc;
-	private static int bankID;
-	private static int accountID;
-	private static TransactionManager tm;
-	private static NewImport newImport;
+	private String fileLoc;
+	private int bankID;
+	private int accountID;
+	private TransactionManager tm;
+	private NewImport newImport;
 	
-	public synchronized static NewImport getInstance() {
-		if (newImport == null) {
-			newImport = new NewImport();
-			firstSetup();
-		}
-		return newImport;
-	}
-	
-	private static void firstSetup() {
-		fileLoc = null;
-		bankID = -1;
-		accountID = -1;
-		tm = null;
-	}
-	
-	public static void newSetup(int bank, int account, String loc) {
+	public NewImport(int bank, int account, String loc) {
+		fileLoc = loc;
 		bankID = bank;
 		accountID = account;
-		fileLoc = loc;
+		tm = TransactionManager.getInstance();
+		importFile();
+	}
+	
+	public void importFile() {
 		
-		switch (bank) {
+		switch (this.bankID) {
 		case 0:
 			importANZ();
 		}
 		
 	}
 
-	private static void importANZ() {
+	private void importANZ() {
 		BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
         try {
 
-            br = new BufferedReader(new FileReader(fileLoc));
+            br = new BufferedReader(new FileReader(this.fileLoc));
             while ((line = br.readLine()) != null) {
 
                 // use comma as separator
                 String[] newImport = line.split(cvsSplitBy);
                 Calendar cal = checkDate(newImport[0]);
                 double amount = Double.parseDouble(newImport[1].replace("\"", ""));
-                System.out.println(newImport[0] + ", " + newImport[1] + ", " + newImport[2] + ", " + newImport[3]);
-                tm = TransactionManager.getInstance();
-                tm.addTransaction(amount, newImport[2], 0, cal, bankID, accountID);
+                //System.out.println(newImport[0] + ", " + newImport[1] + ", " + newImport[2] + ", " + newImport[3]);
+                tm.addTransaction(amount, newImport[2], -1, cal, bankID, accountID);
             }
 
         } catch (FileNotFoundException e) {
@@ -81,7 +70,7 @@ public class NewImport {
         }
 	}
 	
-		private static Calendar checkDate(String dateString) {
+		private Calendar checkDate(String dateString) {
 			String[] dateCheck = dateString.split("/");
 			
 			int day = Integer.parseInt(dateCheck[0]);

@@ -22,7 +22,7 @@ import javax.swing.filechooser.FileSystemView;
 import Transactions.TransactionManager;
 import mainGUI.MainGUI;
 
-public class SelectImportTypeGUI {
+public class SelectImportGUI {
 	
 	private JFrame frame;
 	private JPanel thePanel;
@@ -32,14 +32,14 @@ public class SelectImportTypeGUI {
 	private int accountID;
 	private TransactionManager tm;
 	
-	public SelectImportTypeGUI() {
+	public SelectImportGUI() {
 		initialize();
 	}
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new SelectImportTypeGUI();
+				new SelectImportGUI();
 			}
 		});
 	}
@@ -187,10 +187,9 @@ public class SelectImportTypeGUI {
 					bankID = cb1.getSelectedIndex();
 					accountID = cb2.getSelectedIndex();
 					fileLoc = tf.getText();
-					
-					NewImport im = NewImport.getInstance();
-					im.newSetup(bankID, accountID, fileLoc);
-					new NewImportGIU();
+					new NewImport(bankID, accountID, fileLoc);
+					frame.dispose();
+					new NewImportGUI();
 				}
 				
 			}

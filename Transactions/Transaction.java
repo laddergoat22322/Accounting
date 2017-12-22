@@ -76,4 +76,12 @@ public class Transaction {
 	public int getAccountID() {
 		return accountID;
 	}
+	
+	public boolean isNewImport() {
+		return newImport;
+	}
+	
+	public void setNewImport(boolean b) {
+		this.newImport = b;
+	}
 }
