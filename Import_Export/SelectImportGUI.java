@@ -48,7 +48,7 @@ public class SelectImportGUI {
 		frame = new JFrame();
 		frame.setSize(700,300);
 		frame.setLocationRelativeTo(null);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setTitle("Accounting Program - By Matthew Janssen");
 		
@@ -187,7 +187,7 @@ public class SelectImportGUI {
 					bankID = cb1.getSelectedIndex();
 					accountID = cb2.getSelectedIndex();
 					fileLoc = tf.getText();
-					new NewImport(bankID, accountID, fileLoc);
+					new ImportFile(bankID, accountID, fileLoc);
 					frame.dispose();
 					new NewImportGUI();
 				}

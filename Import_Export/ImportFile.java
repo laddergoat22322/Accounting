@@ -14,14 +14,14 @@ import java.io.IOException;
 import java.util.Calendar;
 import Transactions.TransactionManager;
 
-public class NewImport {
+public class ImportFile {
 	private String fileLoc;
 	private int bankID;
 	private int accountID;
 	private TransactionManager tm;
-	private NewImport newImport;
+	private ImportFile newImport;
 	
-	public NewImport(int bank, int account, String loc) {
+	public ImportFile(int bank, int account, String loc) {
 		fileLoc = loc;
 		bankID = bank;
 		accountID = account;
@@ -46,13 +46,16 @@ public class NewImport {
 
             br = new BufferedReader(new FileReader(this.fileLoc));
             while ((line = br.readLine()) != null) {
-
                 // use comma as separator
                 String[] newImport = line.split(cvsSplitBy);
-                Calendar cal = checkDate(newImport[0]);
-                double amount = Double.parseDouble(newImport[1].replace("\"", ""));
-                //System.out.println(newImport[0] + ", " + newImport[1] + ", " + newImport[2] + ", " + newImport[3]);
-                tm.addTransaction(amount, newImport[2], -1, cal, bankID, accountID);
+                if (newImport.length > 0) {
+                	if ( newImport[0] != null && !newImport[0].isEmpty()) {
+	                    Calendar cal = checkDate(newImport[0]);
+	                    double amount = Double.parseDouble(newImport[1].replace("\"", ""));
+	                    //System.out.println(newImport[0] + ", " + newImport[1] + ", " + newImport[2] + ", " + newImport[3]);
+	                    tm.addTransaction(amount, newImport[2], -1, cal, bankID, accountID);
+                	}
+                }
             }
 
         } catch (FileNotFoundException e) {

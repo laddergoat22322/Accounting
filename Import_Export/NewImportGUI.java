@@ -3,6 +3,8 @@ package Import_Export;
  * @author      Matthew Janssen
  */
 
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -11,12 +13,15 @@ import Transactions.TransactionManager;
 
 import java.text.ParseException;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class NewImportGUI{
 	private JFrame frame;
+	private JPanel thePanel;
 	private Font defaultFont;
-	private String userName;
-	private String uName;
 	private TransactionManager tm;
 
 	/**
@@ -47,29 +52,51 @@ public class NewImportGUI{
 		//Initialize Transaction Manager
 		this.tm = TransactionManager.getInstance();
 		
+		//default font
+		defaultFont = new Font("Tahoma", Font.PLAIN, 15);
+		
 		//Initialize GUI
 		frame = new JFrame();
-		frame.setSize(1400,900);
+		frame.setSize(1200,900);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(true);
 		frame.setTitle("Accounting Program - By " + tm.getUserName());
 		
+		createGUIComponents();
 		
-		//default font
-		defaultFont = new Font("Tahoma", Font.PLAIN, 15);
+		frame.add(thePanel);
+		frame.setVisible(true);
+	}
+
+	private void createGUIComponents() {
 		
-		String[][] data = tm.getAllNewTransactions();
-		String[] header = tm.getIndividualTransactionHeader();
+		thePanel = new JPanel();
+		BoxLayout boxLayout = new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS);
+		thePanel.setLayout(new GridBagLayout());
 		
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 1;
+		c.gridy = 1;
+		c.gridheight = 1;
+		c.gridwidth = 3;
+		c.weightx = 1;
+		c.weighty = 1;
+		c.anchor = GridBagConstraints.CENTER;
+		
+		JLabel headerLabel = new JLabel("Imported Transactions");
+		headerLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
+		headerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		thePanel.add(headerLabel, c);
 		
 		//Initialize JComboBox
 		String[] categories = tm.getCategories();
 		JComboBox<String> combo = new JComboBox<String>(categories);
-		combo.setFont(defaultFont);
-		
+		combo.setFont(defaultFont);		
 		
 		//Initialize JTable
+		String[][] data = tm.getAllNewTransactions();
+		String[] header = tm.getIndividualTransactionHeader();
 		JTable table = new JTable(data,header){
 			  public boolean isCellEditable(int row,int column){
 				    if(column < 1 || column > 1) return false;
@@ -78,6 +105,7 @@ public class NewImportGUI{
 		};
 		table.setFont(defaultFont);
 		table.setRowHeight(20);
+		
 		TableColumn col = table.getColumnModel().getColumn(1);
 		col.setCellEditor(new DefaultCellEditor(combo));
 		
@@ -88,10 +116,38 @@ public class NewImportGUI{
 			table.getColumnModel().getColumn(i).setPreferredWidth(200);
 		}
 		
-		JScrollPane scrollPane=new JScrollPane(table);    
-		frame.getContentPane().add(scrollPane);
+		JScrollPane scrollPane=new JScrollPane(table);
+		scrollPane.setPreferredSize(new Dimension(500, 1000));
+		c.gridy = 2;
+		c.weighty = 15;
+		c.fill = c.BOTH;
+		thePanel.add(scrollPane, c);
 		
-		frame.setVisible(true);
+		JButton doneButton = new JButton("Done");
+		doneButton.setFont(defaultFont);
+		doneButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int numRows = table.getRowCount();
+				for(int i = 0; i < numRows; i++) {
+					String cell = (String) table.getModel().getValueAt(i, 1);
+					if (cell.equals("Choose...")) {
+						JOptionPane.showMessageDialog(frame,
+							    "All transactions must be categorised before continuing",
+							    "Error",
+							    JOptionPane.ERROR_MESSAGE);
+						return ;
+					}
+				}
+				
+			}
+			
+		});
+		c.gridy = 3;
+		c.weighty = 1;
+		c.fill = GridBagConstraints.NONE;
+		thePanel.add(doneButton, c);
 	}
 	
 //	private void tableInitialise() throws ParseException{
