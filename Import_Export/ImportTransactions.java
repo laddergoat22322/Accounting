@@ -14,14 +14,12 @@ import java.io.IOException;
 import java.util.Calendar;
 import Transactions.TransactionManager;
 
-public class ImportFile {
+public class ImportTransactions {
 	private String fileLoc;
 	private int bankID;
 	private int accountID;
 	private TransactionManager tm;
-	private ImportFile newImport;
-	
-	public ImportFile(int bank, int account, String loc) {
+	public ImportTransactions(int bank, int account, String loc) {
 		fileLoc = loc;
 		bankID = bank;
 		accountID = account;
@@ -53,7 +51,7 @@ public class ImportFile {
 	                    Calendar cal = checkDate(newImport[0]);
 	                    double amount = Double.parseDouble(newImport[1].replace("\"", ""));
 	                    //System.out.println(newImport[0] + ", " + newImport[1] + ", " + newImport[2] + ", " + newImport[3]);
-	                    tm.addTransaction(amount, newImport[2], -1, cal, bankID, accountID);
+	                    tm.addTransaction(amount, newImport[2], 0, cal, bankID, accountID);
                 	}
                 }
             }

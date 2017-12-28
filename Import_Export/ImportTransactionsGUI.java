@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.table.TableColumn;
 
 import Transactions.TransactionManager;
+import Transactions.TransactionManager.TransactionAttribute;
 
 import java.text.ParseException;
 import java.awt.Font;
@@ -18,11 +19,13 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class NewImportGUI{
+public class ImportTransactionsGUI{
 	private JFrame frame;
 	private JPanel thePanel;
 	private Font defaultFont;
 	private TransactionManager tm;
+	private JTable table;
+	private Double[] transactionIndex;
 
 	/**
 	 * Launch the application.
@@ -30,7 +33,7 @@ public class NewImportGUI{
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new NewImportGUI();
+				new ImportTransactionsGUI();
 			}
 		});
 	}
@@ -39,7 +42,7 @@ public class NewImportGUI{
 	 * Create the application.
 	 * @throws ParseException 
 	 */
-	public NewImportGUI() {
+	public ImportTransactionsGUI() {
 		initialize();
 	}
 
@@ -69,10 +72,10 @@ public class NewImportGUI{
 		frame.setVisible(true);
 	}
 
+	@SuppressWarnings("serial")
 	private void createGUIComponents() {
 		
 		thePanel = new JPanel();
-		BoxLayout boxLayout = new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS);
 		thePanel.setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = new GridBagConstraints();
@@ -95,9 +98,10 @@ public class NewImportGUI{
 		combo.setFont(defaultFont);		
 		
 		//Initialize JTable
-		String[][] data = tm.getAllNewTransactions();
+		String[][] data = tm.getNewTransactions();
 		String[] header = tm.getIndividualTransactionHeader();
-		JTable table = new JTable(data,header){
+		transactionIndex = tm.getNewTransactionIndexes();
+		table = new JTable(data,header){
 			  public boolean isCellEditable(int row,int column){
 				    if(column < 1 || column > 1) return false;
 				    return true;
@@ -119,7 +123,7 @@ public class NewImportGUI{
 		scrollPane.setPreferredSize(new Dimension(500, 1000));
 		c.gridy = 2;
 		c.weighty = 15;
-		c.fill = c.BOTH;
+		c.fill = GridBagConstraints.BOTH;
 		thePanel.add(scrollPane, c);
 		
 		JButton doneButton = new JButton("Done");
@@ -128,50 +132,42 @@ public class NewImportGUI{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				int dialogResult;
 				int numRows = table.getRowCount();
 				for(int i = 0; i < numRows; i++) {
 					String cell = (String) table.getModel().getValueAt(i, 1);
-					if (cell.equals("Choose...")) {
-						JOptionPane.showMessageDialog(frame,
-							    "All transactions must be categorised before continuing",
-							    "Error",
-							    JOptionPane.ERROR_MESSAGE);
-						return ;
+					if (cell.equals("Uncategorized")) {
+						dialogResult = JOptionPane.showConfirmDialog(frame, 
+								"Not all transactions are categorised.\n Do you still want to continue?",
+								"Warning", 
+								JOptionPane.YES_NO_OPTION);
+						if (dialogResult == JOptionPane.YES_OPTION) {
+							finaliseGUI();
+							return ;
+						}
+						else return ;
 					}
+					finaliseGUI();
 				}
-				frame.dispose();
-			}
-			
+			}			
 		});
 		c.gridy = 3;
 		c.weighty = 1;
 		c.fill = GridBagConstraints.NONE;
 		thePanel.add(doneButton, c);
 	}
+	private void setCategories() {
+		int numRows = table.getRowCount();
+		for(int i = 0; i < numRows; i++) {
+			String cell = (String) table.getModel().getValueAt(i, 1);
+			int categoryIndex = tm.getCategoryByIndex(cell);
+			tm.setTransaction(TransactionAttribute.ACCOUNT_ID, transactionIndex[i], categoryIndex);
+		}
+	}
 	
-//	private void tableInitialise() throws ParseException{
-//		 cal.setFirstDayOfWeek(Calendar.MONDAY);
-//	     String start = "25/12/2016";
-//	     String end = "31/12/2017";
-//	     SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MM/yyyy");
-//	     Calendar scal=Calendar.getInstance();
-//	     scal.setTime(dateFormat.parse(start));
-//	     Calendar ecal=Calendar.getInstance();
-//	     ecal.setTime(dateFormat.parse(end));
-//
-//	     ArrayList<Date> mondayDates=new ArrayList<>();
-//
-//	     while(!scal.equals(ecal)){
-//	         scal.add(Calendar.DATE, 1);
-//	         if(scal.get(Calendar.DAY_OF_WEEK)==Calendar.MONDAY){
-//	             mondayDates.add(scal.getTime());
-//	         }
-//	     }
-//
-//	     TOTALROWS = mondayDates.size();
-//	     for(int i = 0; i < TOTALROWS; i++) {
-//	    	 allData[i][0] = new SimpleDateFormat("dd/MM/yyyy").format(mondayDates.get(i));
-//	     }
-//	}
-
+	private void finaliseGUI() {
+		setCategories();
+		new ExportProgram();
+		frame.dispose();
+	}
 }

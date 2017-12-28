@@ -20,9 +20,8 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileSystemView;
 
 import Transactions.TransactionManager;
-import mainGUI.MainGUI;
 
-public class SelectImportGUI {
+public class ImportSelectGUI {
 	
 	private JFrame frame;
 	private JPanel thePanel;
@@ -32,14 +31,14 @@ public class SelectImportGUI {
 	private int accountID;
 	private TransactionManager tm;
 	
-	public SelectImportGUI() {
+	public ImportSelectGUI() {
 		initialize();
 	}
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new SelectImportGUI();
+				new ImportSelectGUI();
 			}
 		});
 	}
@@ -188,9 +187,9 @@ public class SelectImportGUI {
 					bankID = cb1.getSelectedIndex();
 					accountID = cb2.getSelectedIndex();
 					fileLoc = tf.getText();
-					new ImportFile(bankID, accountID, fileLoc);
+					new ImportTransactions(bankID, accountID, fileLoc);
 					frame.dispose();
-					new NewImportGUI();
+					new ImportTransactionsGUI();
 				}
 				
 			}

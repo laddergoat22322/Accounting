@@ -4,12 +4,11 @@ package mainGUI;
  */
 
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Font;
 
 import javax.swing.*;
 
-import Import_Export.SelectImportGUI;
+import Import_Export.ImportSelectGUI;
 import Transactions.TransactionManager;
 
 import java.text.ParseException;
@@ -17,6 +16,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+@SuppressWarnings("serial")
 public class MainGUI extends JFrame {
 	private JFrame frame;
 	private JPanel thePanel;
@@ -61,7 +61,7 @@ public class MainGUI extends JFrame {
           i1 = createMenuItem("Import");
           i1.addActionListener(new ActionListener() {
         	  public void actionPerformed(ActionEvent e) {
-        		  new SelectImportGUI();
+        		  new ImportSelectGUI();
         	  }
           });;
           i2 = createMenuItem("Settings");

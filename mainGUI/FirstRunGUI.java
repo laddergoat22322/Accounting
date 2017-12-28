@@ -1,7 +1,6 @@
 package mainGUI;
 
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -17,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+@SuppressWarnings("serial")
 public class FirstRunGUI extends JFrame {
 	private JFrame frame;
 	private JPanel thePanel;
@@ -31,7 +31,7 @@ public class FirstRunGUI extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				FirstRunGUI window = new FirstRunGUI();
+				new FirstRunGUI();
 			}
 		});
 	}

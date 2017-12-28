@@ -1,2 +1,4 @@
 /Transaction.class
 /TransactionManager.class
+/TransactionManager$Transaction.class
+/TransactionManager$TransactionAttribute.class

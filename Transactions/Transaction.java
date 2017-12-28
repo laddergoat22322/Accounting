@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Transaction {
+	private double transactionNumber;
 	private Calendar date;
 	private String description;
 	private int bankID;
@@ -18,7 +19,8 @@ public class Transaction {
 	private boolean internal;
 	private boolean newImport;
 	
-	public Transaction(double amount, String description, int category, Calendar date, int bank, int accountID) {
+	public Transaction(double transactionNumber, double amount, String description, int category, Calendar date, int bank, int accountID) {
+		this.transactionNumber = transactionNumber;
 		this.amount = amount;
 		this.description = description;
 		this.categoryID = category;
@@ -83,5 +85,21 @@ public class Transaction {
 	
 	public void setNewImport(boolean b) {
 		this.newImport = b;
+	}
+	
+	public int getDay() {
+		return date.get(Calendar.DAY_OF_MONTH);
+	}
+	
+	public int getMonth() {
+		return date.get(Calendar.MONTH) + 1;
+	}
+	
+	public int getYear() {
+		return date.get(Calendar.YEAR);
+	}
+	
+	public double getTransactionNumber() {
+		return transactionNumber;
 	}
 }
