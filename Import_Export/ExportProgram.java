@@ -24,6 +24,7 @@ import java.io.File;
 public class ExportProgram {
 	
 	private String fileLoc;
+	private String fileDir;
 	private Document doc;
 	private TransactionManager tm;
 	private double numTrans;
@@ -35,6 +36,7 @@ public class ExportProgram {
 	
 	private void setup() {
 		fileLoc = "C:/Accounting Program/Data.xml";
+		fileDir = "C:/Accounting Program";
 		tm = TransactionManager.getInstance();
 		numTrans = tm.getNumberOfTransactions();
 	}
@@ -56,9 +58,9 @@ public class ExportProgram {
 	         
 	         // UserName element
 	         String name = tm.getUserName();
-//	         if (!name.isEmpty() && name != null) {
-//		         userData.appendChild(createElement("username", name));
-//	         }
+	         if (!name.isEmpty() && name != null) {
+		         userData.appendChild(createElement("username", name));
+	         }
 	         
 	         //User categories
 	         Element categories = doc.createElement("categories");
@@ -105,7 +107,11 @@ public class ExportProgram {
 				transactions.appendChild(transaction);
 	         }
 
-
+	         //check if directory and file exists
+	         File dir = new File(fileDir);
+	         dir.mkdir();
+	         
+	         
 	         // write the content into xml file
 	         TransformerFactory transformerFactory = TransformerFactory.newInstance();
 	         Transformer transformer = transformerFactory.newTransformer();
