@@ -16,6 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import Transactions.TransactionManager;
+
 @SuppressWarnings("serial")
 public class FirstRunGUI extends JFrame {
 	private JFrame frame;
@@ -28,13 +30,13 @@ public class FirstRunGUI extends JFrame {
 		initialize();
 	}
 	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				new FirstRunGUI();
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				new FirstRunGUI();
+//			}
+//		});
+//	}
 
 	private void initialize() {
 		frame = new JFrame();
@@ -100,8 +102,10 @@ public class FirstRunGUI extends JFrame {
 						    JOptionPane.ERROR_MESSAGE);
 				}
 				else {
+					TransactionManager tm = TransactionManager.getInstance();
+					tm.setUserName(tf.getText());
 					frame.dispose();
-					new MainGUI(tf.getText());
+					new MainGUI();
 				}
 			}
 		});

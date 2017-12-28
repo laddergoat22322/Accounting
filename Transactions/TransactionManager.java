@@ -48,17 +48,30 @@ public class TransactionManager {
 		addCategory("Miscellaneous");
 		addCategory("Going Away");
 		
-		banks.add("ANZ");
-		banks.add("Commonwealth");
+		addBank("ANZ");
+		addBank("Commonwealth");
 		
-		accounts.get(0).add("Spendings");
-		accounts.get(0).add("Low Interest");
-		accounts.get(0).add("High Interest");
-		accounts.get(0).add("Credit Card");
-		accounts.get(1).add("Spending");
-		accounts.get(1).add("Low Interest");
+		addAccount(0, "Spendings");
+		addAccount(0, "Low Interest");
+		addAccount(0, "High Interest");
+		addAccount(0, "Credit Card");
+		addAccount(1, "Spendings");
+		addAccount(1, "Low Interest");
 	}
 
+
+	public static void addAccount(int bankID, String accountName) {
+		if (accounts.size() < 1) {
+			accounts.add(new ArrayList<String>());
+		}
+		else if (accounts.size() < bankID) {
+			for (int i = accounts.size(); bankID < i; i++) {
+				System.out.println("bankSize: " + i + " numBanks");
+				accounts.add(new ArrayList<String>());
+			}
+		}
+		accounts.get(bankID).add(accountName);
+	}
 
 	public String getUserName(){
 		return TransactionManager.uName;
@@ -231,6 +244,10 @@ public class TransactionManager {
 
 	public int getNumberOfBanks() {
 		return banks.size();
+	}
+
+	public static void addBank(String bankName) {
+		banks.add(bankName);
 	}
 
 }
