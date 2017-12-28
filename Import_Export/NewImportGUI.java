@@ -110,11 +110,10 @@ public class NewImportGUI{
 		col.setCellEditor(new DefaultCellEditor(combo));
 		
 		//Set width of columns
-		int rows = table.getColumnCount();
-		table.getColumnModel().getColumn(0).setPreferredWidth(50);
-		for(int i = 1; i < rows; i++) {
-			table.getColumnModel().getColumn(i).setPreferredWidth(200);
-		}
+		table.getColumnModel().getColumn(0).setPreferredWidth(50); 	//Date
+		table.getColumnModel().getColumn(1).setPreferredWidth(200);	//Category
+		table.getColumnModel().getColumn(2).setPreferredWidth(650);	//Description
+		table.getColumnModel().getColumn(3).setPreferredWidth(100);	//Amount
 		
 		JScrollPane scrollPane=new JScrollPane(table);
 		scrollPane.setPreferredSize(new Dimension(500, 1000));
@@ -140,7 +139,7 @@ public class NewImportGUI{
 						return ;
 					}
 				}
-				
+				frame.dispose();
 			}
 			
 		});

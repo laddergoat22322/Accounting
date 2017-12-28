@@ -141,6 +141,7 @@ public class SelectImportGUI {
 		c.gridx++;
 		c.ipadx = 0;
 		c.anchor = GridBagConstraints.WEST;
+		tf.setText("C:/Users/matth/Downloads/CSVData.csv");
 		thePanel.add(tf, c);
 		
 		JButton findFileButton = new JButton("Select...");

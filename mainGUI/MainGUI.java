@@ -32,6 +32,9 @@ public class MainGUI extends JFrame {
 		this.tm = new TransactionManager();
 		tm.setUserName(uName);
 		initialize();
+		
+		
+		
 	}
 
 	private void initialize() {
@@ -45,8 +48,6 @@ public class MainGUI extends JFrame {
 		thePanel.setLayout(new GridBagLayout());
 		
 		createMenu();
-		
-		
 		
 		frame.add(thePanel);
 		frame.setVisible(true);
