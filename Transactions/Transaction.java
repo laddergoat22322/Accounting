@@ -19,16 +19,32 @@ public class Transaction {
 	private boolean internal;
 	private boolean newImport;
 	
-	public Transaction(double transactionNumber, double amount, String description, int category, Calendar date, int bank, int accountID) {
+	
+	  /**
+	  * Constructor.
+	  * 
+	  * @param transactionNumber Index at where the transaction is defined
+	  * @param amount Transaction amount
+	  * @param description Description of the transaction
+	  * @param category Index for the category's name in {@link Transactions.TransactionManager}
+	  * @param date Transactions date, stored in {@link java.util.Date}
+	  * @param bank Index for the Bank's name in {@link Transactions.TransactionManager}
+	  * @param accountID Index for the account's name in {@link Transactions.TransactionManager}
+	  * @param newImport If the transaction has been categorized
+	  * @param internal If the transaction is between the personal accounts
+	  */
+	public Transaction(double transactionNumber, double amount, String description, 
+			int category, Calendar date, int bank, int accountID, boolean newImport, boolean internal) {
 		this.transactionNumber = transactionNumber;
 		this.amount = amount;
 		this.description = description;
 		this.categoryID = category;
 		this.date = date;
-		this.internal = false;
+		this.internal = internal;
 		this.bankID = bank;
 		this.accountID = accountID;
-		this.newImport = true;
+		this.newImport = newImport;
+		
 	}
 	
 	public double getAmount() {

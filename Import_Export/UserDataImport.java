@@ -39,7 +39,6 @@ public class UserDataImport {
 			//Import Username
 			NodeList usernameList = doc.getElementsByTagName("username");
 			tm.setUserName(usernameList.item(0).getTextContent());
-			System.out.println(usernameList.item(0).getTextContent());
 			
 			//Import categories
 			NodeList nList = doc.getElementsByTagName("category");
@@ -69,7 +68,6 @@ public class UserDataImport {
 				
 				//TransactionID parse
 				double transactionID = Double.parseDouble(transactionDataList.item(0).getTextContent());
-				System.out.print(transactionID + ", ");
 				
 				//Date Parse
 				Node dateNode = transactionDataList.item(1);
@@ -80,37 +78,30 @@ public class UserDataImport {
 					int month = Integer.parseInt(dateList.item(1).getTextContent());
 					int year =  Integer.parseInt(dateList.item(2).getTextContent());
 					cal.set(year, month, day);
-					System.out.print(day + "/" + month + "/" + year + ", ");
 				}
 				
 				//BankID Parse
 				int bankID = Integer.parseInt(transactionDataList.item(2).getTextContent());
-				System.out.print(bankID + ", ");
 				
 				//AccountID Parse
 				int accountID = Integer.parseInt(transactionDataList.item(3).getTextContent());
-				System.out.print(accountID + ", ");
 				
 				//CategoryID Parse
 				int categoryID = Integer.parseInt(transactionDataList.item(4).getTextContent());
-				System.out.print(categoryID + ", ");
 				
 				//Amount Parse
 				double amount = Double.parseDouble(transactionDataList.item(5).getTextContent());
-				System.out.print(amount + ", ");
 				
 				//Internal Parse
 				boolean internal = Boolean.parseBoolean(transactionDataList.item(6).getTextContent());
-				System.out.print(internal + ", ");
 				
 				//newImport Parse
 				boolean newImport = Boolean.parseBoolean(transactionDataList.item(7).getTextContent());
-				System.out.println(newImport + ", ");
 				
 				//Description
 				String description = transactionDataList.item(8).getTextContent();
 				
-				tm.addTransaction(amount, description, categoryID, cal, bankID, accountID);
+				tm.addTransaction(amount, description, categoryID, cal, bankID, accountID, newImport, internal);
 				
 			}
 			

@@ -67,14 +67,15 @@ public class TransactionManager {
 	}
 
 	public boolean addTransaction(double amount, String description, int category,
-			Calendar date, int bank, int account) {
+			Calendar date, int bank, int account, boolean newImport, boolean internal) {
 		
 		if(category < 0 || category >= categories.size()) {
 			return false;
 		}
 		
 		double transactionNumber = transactions.size();
-		Transaction newTrans = new Transaction(transactionNumber, amount, description, category, date, bank, account);
+		Transaction newTrans = new Transaction(transactionNumber, amount, description, 
+				category, date, bank, account, newImport, internal);
 		transactions.add(newTrans);
 		return true;
 	}

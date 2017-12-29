@@ -50,8 +50,7 @@ public class ImportTransactions {
                 	if ( newImport[0] != null && !newImport[0].isEmpty()) {
 	                    Calendar cal = checkDate(newImport[0]);
 	                    double amount = Double.parseDouble(newImport[1].replace("\"", ""));
-	                    //System.out.println(newImport[0] + ", " + newImport[1] + ", " + newImport[2] + ", " + newImport[3]);
-	                    tm.addTransaction(amount, newImport[2], 0, cal, bankID, accountID);
+	                    tm.addTransaction(amount, newImport[2], 0, cal, bankID, accountID, true, false);
                 	}
                 }
             }
