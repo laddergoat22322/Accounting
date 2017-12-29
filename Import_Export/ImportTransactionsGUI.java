@@ -167,7 +167,7 @@ public class ImportTransactionsGUI{
 	
 	private void finaliseGUI() {
 		setCategories();
-		new ExportProgram();
+		new UserDataExport();
 		frame.dispose();
 	}
 }

@@ -39,38 +39,23 @@ public class TransactionManager {
 		banks = new ArrayList<String>();
 		accounts = new ArrayList<ArrayList<String>>();
 		accounts.add(new ArrayList<String>());
-		accounts.add(new ArrayList<String>());
 		
-		addCategory("Uncategorized");
-		addCategory("Food");
-		addCategory("Car");
-		addCategory("Home");
-		addCategory("Miscellaneous");
-		addCategory("Going Away");
+//		addCategory("Uncategorized");
+//		addCategory("Food");
+//		addCategory("Car");
+//		addCategory("Home");
+//		addCategory("Miscellaneous");
+//		addCategory("Going Away");
 		
-		addBank("ANZ");
-		addBank("Commonwealth");
+//		addBank("ANZ");
+//		addBank("Commonwealth");
 		
-		addAccount(0, "Spendings");
-		addAccount(0, "Low Interest");
-		addAccount(0, "High Interest");
-		addAccount(0, "Credit Card");
-		addAccount(1, "Spendings");
-		addAccount(1, "Low Interest");
-	}
-
-
-	public static void addAccount(int bankID, String accountName) {
-		if (accounts.size() < 1) {
-			accounts.add(new ArrayList<String>());
-		}
-		else if (accounts.size() < bankID) {
-			for (int i = accounts.size(); bankID < i; i++) {
-				System.out.println("bankSize: " + i + " numBanks");
-				accounts.add(new ArrayList<String>());
-			}
-		}
-		accounts.get(bankID).add(accountName);
+//		addAccount(0, "Spendings");
+//		addAccount(0, "Low Interest");
+//		addAccount(0, "High Interest");
+//		addAccount(0, "Credit Card");
+//		addAccount(1, "Spendings");
+//		addAccount(1, "Low Interest");
 	}
 
 	public String getUserName(){
@@ -160,6 +145,15 @@ public class TransactionManager {
 		return b;
 	}
 
+	public static void addAccount(int bankID, String accountName) {
+		if (accounts.size() < 1) {
+			accounts.add(new ArrayList<String>());
+		}
+		if (accounts.size() <= bankID) {
+			accounts.add(new ArrayList<String>());
+		}
+		accounts.get(bankID).add(accountName);
+	}
 
 	public String[] getAccounts(int bankID) {
 		int numAccounts = accounts.get(bankID).size();

@@ -21,7 +21,7 @@ import java.io.File;
 
 
 @SuppressWarnings("unused")
-public class ExportProgram {
+public class UserDataExport {
 	
 	private String fileLoc;
 	private String fileDir;
@@ -29,7 +29,7 @@ public class ExportProgram {
 	private TransactionManager tm;
 	private double numTrans;
 	
-	public ExportProgram() {
+	public UserDataExport() {
 		setup();
 		export();
 	}
@@ -98,12 +98,13 @@ public class ExportProgram {
 				int bank = t.getBankID();
 				int account = t.getAccountID();
 				int category = t.getCategory();
+				String description = t.getDescription();
 				double amount = t.getAmount();
 				double transactionID = t.getTransactionNumber();
 				boolean internal = t.isInternal();
 				boolean newImport = t.isNewImport();
 				Element transaction = createTransactionElement(day, month, year, bank, account, category,
-						transactionID, amount, internal, newImport);
+						transactionID, description, amount, internal, newImport);
 				transactions.appendChild(transaction);
 	         }
 
@@ -134,7 +135,7 @@ public class ExportProgram {
 	}
 	
 	private Element createTransactionElement(int day, int month, int year, int bank, int account, int category,
-			double transaction, double amount, boolean internal, boolean newImport) {
+			double transaction, String description, double amount, boolean internal, boolean newImport) {
 		
 				// Single Transaction element
 		         Element tran = doc.createElement("transaction");
@@ -148,12 +149,13 @@ public class ExportProgram {
 		         date.appendChild(createElement("month", Integer.toString(month)));
 		         date.appendChild(createElement("year" , Integer.toString(year)));
 		         
-		         tran.appendChild(createElement("bankID"    , Integer.toString(bank)));
-		         tran.appendChild(createElement("accountID" , Integer.toString(account)));
-		         tran.appendChild(createElement("categoryID", Integer.toString(category)));
-		         tran.appendChild(createElement("amount"    , Double.toString(amount)));
-		         tran.appendChild(createElement("internal"  , Boolean.toString(internal)));
-		         tran.appendChild(createElement("newImport" , Boolean.toString(newImport)));
+		         tran.appendChild(createElement("bankID"     , Integer.toString(bank)));
+		         tran.appendChild(createElement("accountID"  , Integer.toString(account)));
+		         tran.appendChild(createElement("categoryID" , Integer.toString(category)));
+		         tran.appendChild(createElement("amount"     , Double.toString(amount)));
+		         tran.appendChild(createElement("internal"   , Boolean.toString(internal)));
+		         tran.appendChild(createElement("newImport"  , Boolean.toString(newImport)));
+		         tran.appendChild(createElement("description", description));
 		         return tran;
 	}
 }

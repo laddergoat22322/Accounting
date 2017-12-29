@@ -12,12 +12,12 @@ import org.w3c.dom.Element;
 import java.io.File;
 import java.util.Calendar;
 
-public class ImportUsersData {
+public class UserDataImport {
 	
 	private String fileLoc;
 	private TransactionManager tm;
 	
-	public ImportUsersData() {
+	public UserDataImport() {
 		this.fileLoc = "C:/Accounting Program/Data.xml";
 		this.tm = TransactionManager.getInstance();
 		importData();
@@ -36,10 +36,14 @@ public class ImportUsersData {
 			//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 			doc.getDocumentElement().normalize();
 			
+			//Import Username
+			NodeList usernameList = doc.getElementsByTagName("username");
+			tm.setUserName(usernameList.item(0).getTextContent());
+			System.out.println(usernameList.item(0).getTextContent());
+			
 			//Import categories
 			NodeList nList = doc.getElementsByTagName("category");
 			for (int i = 0; i < nList.getLength(); i++) {
-				
 				Node nNode = nList.item(i);
 				tm.addCategory(nNode.getTextContent());
 			}
@@ -53,7 +57,6 @@ public class ImportUsersData {
 				NodeList accountsList = nNode.getChildNodes();
 				for (int j = 0; j < accountsList.getLength(); j++) {
 					Node accountNode = accountsList.item(j);
-					System.out.println(accountNode.getNodeName() + ", " + accountNode.getTextContent());
 					tm.addAccount(i, accountNode.getTextContent());
 				}
 			}
@@ -104,7 +107,10 @@ public class ImportUsersData {
 				boolean newImport = Boolean.parseBoolean(transactionDataList.item(7).getTextContent());
 				System.out.println(newImport + ", ");
 				
-				tm.addTransaction(amount, "forgot to export description", categoryID, cal, bankID, accountID);
+				//Description
+				String description = transactionDataList.item(8).getTextContent();
+				
+				tm.addTransaction(amount, description, categoryID, cal, bankID, accountID);
 				
 			}
 			

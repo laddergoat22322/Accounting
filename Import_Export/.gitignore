@@ -35,3 +35,7 @@
 /ImportSelectGUI.class
 /ExportProgram.class
 /ImportUsersData.class
+/UsersDataExport.class
+/UsersDataImport.class
+/UserDataImport.class
+/UserDataExport.class
