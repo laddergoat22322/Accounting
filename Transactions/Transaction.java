@@ -132,19 +132,44 @@ public class Transaction {
 	public double getTransactionNumber() {
 		return transactionNumber;
 	}
-
+	
+	
+	/** 
+	  * Get the {@link Transactions.Transaction} value transacted.
+	  * 
+	  * @return {@link Transactions.Transaction} value transacted
+	  */
 	public double getValueTransacted() {
 		return valueTransacted;
 	}
-
+	
+	
+	  /** 
+	    * Get the year of the {@link Transactions.Transaction}
+	    * 
+	    * @return Year of {@link Transactions.Transaction}
+	    */
 	public int getYear() {
 		return date.get(Calendar.YEAR);
 	}
 
+	  /** 
+	    * Get if the {@link Transactions.Transaction} is an internal transaction between
+	    * personal accounts
+	    * 
+	    * @return <code>if</code> {@link Transactions.Transaction} is an internal transaction 
+	    * between personal accounts, returns {@code true}
+	    */
 	public boolean isInternal() {
 		return internal;
 	}
-
+	
+	
+	  /** 
+	    * Get if the {@link Transactions.Transaction} is an unsorted/categorized
+	    * 
+	    * @return <code>if</code> {@link Transactions.Transaction} is uncategorised, returns {@code true}
+	    */
 	public boolean isNewImport() {
 		return newImport;
 	}
@@ -158,6 +183,12 @@ public class Transaction {
 		this.categoryID = category;
 	}
 	
+	
+	/** 
+	 * Set the {@link Transactions.Transaction} {@link java.util.Calendar}.
+	 * 
+	 * @param date The {@link java.util.Calendar} to be set
+	 */
 	public void setDate(Calendar date) {
 		this.date = date;
 	}
@@ -171,10 +202,22 @@ public class Transaction {
 		this.description = description;
 	}
 	
+	
+	  /** 
+	    * Set if the {@link Transactions.Transaction} is internal
+	    * 
+	    * @param internal Boolean if {@link Transactions.Transaction} is internal
+	    */
 	public void setInternal(boolean internal) {
 		this.internal = internal;
 	}
 	
+	
+	  /** 
+	    * Set if the {@link Transactions.Transaction} is a new import
+	    * 
+	    * @param b Boolean if {@link Transactions.Transaction} is a new import
+	    */
 	public void setNewImport(boolean b) {
 		this.newImport = b;
 	}
