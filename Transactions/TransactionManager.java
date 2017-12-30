@@ -131,7 +131,7 @@ public class TransactionManager {
 				exportedTransactions[i][0] = new SimpleDateFormat("dd/MM/yyyy").format(tempDate);
 				exportedTransactions[i][1] = categories.get(transactions.get(i).getCategory());
 				exportedTransactions[i][2] = transactions.get(i).getDescription();
-				exportedTransactions[i][3] = String.valueOf(transactions.get(i).getAmount());
+				exportedTransactions[i][3] = String.valueOf(transactions.get(i).getValueTransacted());
 			}
 		}
 		return exportedTransactions;

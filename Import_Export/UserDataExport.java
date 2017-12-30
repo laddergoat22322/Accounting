@@ -99,7 +99,7 @@ public class UserDataExport {
 				int account = t.getAccountID();
 				int category = t.getCategory();
 				String description = t.getDescription();
-				double amount = t.getAmount();
+				double amount = t.getValueTransacted();
 				double transactionID = t.getTransactionNumber();
 				boolean internal = t.isInternal();
 				boolean newImport = t.isNewImport();

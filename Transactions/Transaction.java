@@ -8,35 +8,44 @@ package Transactions;
 import java.util.Calendar;
 import java.util.Date;
 
+
+/**
+* Transaction Object.
+* 
+* <P>Various attributes of a Transaction
+*  
+* @author Matthew Janssen
+* @version 1.0
+*/
 public class Transaction {
-	private double transactionNumber;
+	private int accountID;
+	private int bankID;
+	private int categoryID;
 	private Calendar date;
 	private String description;
-	private int bankID;
-	private int accountID;
-	private int categoryID;
-	private double amount;
 	private boolean internal;
 	private boolean newImport;
+	private double transactionNumber;
+	private double valueTransacted;
 	
 	
 	  /**
 	  * Constructor.
 	  * 
 	  * @param transactionNumber Index at where the transaction is defined
-	  * @param amount Transaction amount
+	  * @param valueTransacted Transactions value Transacted, positive or negative
 	  * @param description Description of the transaction
 	  * @param category Index for the category's name in {@link Transactions.TransactionManager}
-	  * @param date Transactions date, stored in {@link java.util.Date}
+	  * @param date Transactions date, stored as {@link java.util.Date}
 	  * @param bank Index for the Bank's name in {@link Transactions.TransactionManager}
 	  * @param accountID Index for the account's name in {@link Transactions.TransactionManager}
 	  * @param newImport If the transaction has been categorized
 	  * @param internal If the transaction is between the personal accounts
 	  */
-	public Transaction(double transactionNumber, double amount, String description, 
+	public Transaction(double transactionNumber, double valueTransacted, String description, 
 			int category, Calendar date, int bank, int accountID, boolean newImport, boolean internal) {
 		this.transactionNumber = transactionNumber;
-		this.amount = amount;
+		this.valueTransacted = valueTransacted;
 		this.description = description;
 		this.categoryID = category;
 		this.date = date;
@@ -47,75 +56,135 @@ public class Transaction {
 		
 	}
 	
-	public double getAmount() {
-		return amount;
+	
+	/** 
+	  * Get the {@link Transactions.Transaction} account index for {@link Transactions.TransactionManager#accounts}.
+	  * 
+	  * @return {@link Transactions.Transaction} account index
+	  */
+	public int getAccountID() {
+		return accountID;
 	}
 	
-	public void setAmount(int amount) {
-		this.amount = amount;
-	}
-
-	public String getDescription() {
-		return description;
+	
+	/** 
+	  * Get the {@link Transactions.Transaction} bank index for {@link Transactions.TransactionManager#banks}.
+	  * 
+	  * @return {@link Transactions.Transaction} bank index
+	  */
+	public int getBankID() {
+		return bankID;
 	}
 	
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
+	/** 
+	  * Get the {@link Transactions.Transaction} category index for {@link Transactions.TransactionManager#categories}.
+	  * 
+	  * @return {@link Transactions.Transaction} category index
+	  */
 	public int getCategory() {
 		return categoryID;
 	}
 	
-	public void setCategory(int category) {
-		this.categoryID = category;
-	}
 	
+	/** 
+	  * Get the {@link java.util.Date} of the {@link Transactions.Transaction}
+	  * 
+	  * @return {@link java.util.Date} of {@link Transactions.Transaction}
+	  */
 	public Date getDate() {
 		return date.getTime();
 	}
 	
-	public void setDate(Calendar date) {
-		this.date = date;
+	  /** 
+	    * Get the day in month of the {@link Transactions.Transaction}
+	    * 
+	    * @return Day in month of {@link Transactions.Transaction}
+	    */
+	  public int getDay() {
+		return date.get(Calendar.DAY_OF_MONTH);
+	}
+	
+	
+	/** Return the {@link Transactions.Transaction} description. 
+	 * 
+	 * @return {@link Transactions.Transaction} description
+	 */ 
+	public String getDescription() {
+		return description;
+	}
+	
+	
+	/** 
+	  * Get the month in year of the {@link Transactions.Transaction}
+	  * 
+	  * @return Month in year of {@link Transactions.Transaction}
+	  */
+	public int getMonth() {
+		return date.get(Calendar.MONTH) + 1;
+	}
+	
+	
+	/** 
+	  * Get the {@link Transactions.Transaction}'s index for {@link Transactions.TransactionManager#transactions}.
+	  * 
+	  * @return {@link Transactions.Transaction}'s index
+	  */
+	public double getTransactionNumber() {
+		return transactionNumber;
+	}
+
+	public double getValueTransacted() {
+		return valueTransacted;
+	}
+
+	public int getYear() {
+		return date.get(Calendar.YEAR);
 	}
 
 	public boolean isInternal() {
 		return internal;
 	}
 
-	public void setInternal(boolean internal) {
-		this.internal = internal;
-	}
-
-	public int getBankID() {
-		return bankID;
-	}
-
-	public int getAccountID() {
-		return accountID;
-	}
-	
 	public boolean isNewImport() {
 		return newImport;
+	}
+	
+	/** 
+	  * Set the {@link Transactions.Transaction} category index for {@link Transactions.TransactionManager#categories}.
+	  * 
+	  * @param category new {@link Transactions.Transaction} category's index in {@link Transactions.TransactionManager#categories}
+	  */
+	public void setCategory(int category) {
+		this.categoryID = category;
+	}
+	
+	public void setDate(Calendar date) {
+		this.date = date;
+	}
+	
+	/** 
+	 * Set the {@link Transactions.Transaction} description.
+	 * 
+	 * @param description new {@link Transactions.Transaction} description
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public void setInternal(boolean internal) {
+		this.internal = internal;
 	}
 	
 	public void setNewImport(boolean b) {
 		this.newImport = b;
 	}
 	
-	public int getDay() {
-		return date.get(Calendar.DAY_OF_MONTH);
-	}
-	
-	public int getMonth() {
-		return date.get(Calendar.MONTH) + 1;
-	}
-	
-	public int getYear() {
-		return date.get(Calendar.YEAR);
-	}
-	
-	public double getTransactionNumber() {
-		return transactionNumber;
+	/** 
+	 * Set the value transacted.
+	 * 
+	 * @param valueTransacted the new {@link Transactions.Transaction} value Transacted
+	 */
+	public void setValueTransacted(double valueTransacted) {
+		this.valueTransacted = valueTransacted;
 	}
 }
