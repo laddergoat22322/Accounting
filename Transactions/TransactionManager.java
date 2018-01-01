@@ -5,35 +5,97 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+
 public class TransactionManager {
 	
-	private static TransactionManager tm;
-	private static ArrayList<Transaction> transactions;
-	private static ArrayList<String> categories;
-	private static ArrayList<String> banks;
-	private static ArrayList<ArrayList<String>> accounts;
-	private static String uName;
 	public enum TransactionAttribute {
-		DATE,
+		ACCOUNT_ID,
 		AMOUNT,
 		BANK_ID,
-		ACCOUNT_ID,
 		CATEGORY_ID,
-		TRANSACTION_ID,
+		DATE,
+		DESCRIPTION,
 		INTERNAL,
 		NEWIMPORT,
-		DESCRIPTION;
+		TRANSACTION_ID;
+	}
+	private static ArrayList<ArrayList<String>> accounts;
+	private static ArrayList<String> banks;
+	private static ArrayList<String> categories;
+	private static TransactionManager tm;
+	private static ArrayList<Transaction> transactions;
+	private static String uName;
+	
+	
+	/** 
+	  * Add a new bank account to a bank in {@link #accounts}.
+	  * 
+	  * @param bankID Bank ID that a new account is being added to
+	  * @param accountName New bank account name
+	  */
+	public static void addAccount(int bankID, String accountName) {
+		if (accounts.size() < 1) accounts.add(new ArrayList<String>());
+		if (accounts.size() <= bankID) 	accounts.add(new ArrayList<String>());
+		
+		accounts.get(bankID).add(accountName);
 	}
 	
+	
+	/** 
+	  * Add a new bank to {@link #banks}.
+	  * 
+	  * @param bankName New bank's name
+	  * @return True if the bank's name does not already exist
+	  */
+	public static boolean addBank(String bankName) {
+		
+		/** check the bank name does not exist*/
+		for (int i = 0; i < banks.size(); i++) {
+			if (banks.get(i).equals(bankName)) {
+				return false;
+			}
+		}
+		banks.add(bankName);
+		return true;
+	}
+	
+	
+	/**
+	 * Add a new category to {@link #categories}
+	 * @param category new category name
+	 * @return True if the category does not exist
+	 */
+	public static boolean addCategory(String category) {
+		
+		/**check category doesn't exist already*/
+		for(int i = 0; i < categories.size(); i++) {
+			if(category.equals(categories.get(i))) {
+				return false;
+			}
+		}
+		categories.add(category);
+		return true;
+	}
+	
+	
+	/**
+	 * Initialises the class {@link Transactions.TransactionManager} if not already
+	 * initialised, keeping the usage of the class synchronised
+	 * @return Synchronised class {@linkplain Transactions.TransactionManager}
+	 */
 	public synchronized static TransactionManager getInstance() {
 		if (tm == null) {
-			tm = new TransactionManager();
 			setup();
 		}
 		return tm;
 	}
-	
+
+	/**
+	 * First time setup for {@link Transactions.TransactionManager} that initialises
+	 * field variables.
+	 */
 	private static void setup() {
+		tm = new TransactionManager();
 		transactions = new ArrayList<Transaction>();
 		categories = new ArrayList<String>();
 		banks = new ArrayList<String>();
@@ -57,21 +119,28 @@ public class TransactionManager {
 //		addAccount(1, "Spendings");
 //		addAccount(1, "Low Interest");
 	}
-
-	public String getUserName(){
-		return TransactionManager.uName;
-	}
 	
-	public void setUserName(String name){
-		TransactionManager.uName = name;
-	}
-
+	
+	/**
+	 * Add a transaction to {@link #transactions}
+	 * 
+	 * @param amount transacted value
+	 * @param description A description of the {@link Transactions.Transaction}
+	 * @param category Category index for {@link #categories}
+	 * @param date {@link java.util.Calendar} with {@link java.util.Date} of {@link Transactions.Transaction}
+	 * @param bank Bank index for {@link #banks}
+	 * @param account account index for {@link #accounts}
+	 * @param newImport True if the {@link Transactions.Transaction} is uncategorized, else false
+	 * @param internal True if the {@link Transactions.Transaction} is an internal transfer between
+	 * 		  personal accounts, else false
+	 * @return True if the bank, category and account index exist within {@link #banks},
+	 * {@link #categories}, {@link #accounts} respectively
+	 */
 	public boolean addTransaction(double amount, String description, int category,
 			Calendar date, int bank, int account, boolean newImport, boolean internal) {
 		
-		if(category < 0 || category >= categories.size()) {
-			return false;
-		}
+		if(category < 0 || category >= categories.size()) return false;
+		if(bank < 0 || bank >= banks.size()) return false;
 		
 		double transactionNumber = transactions.size();
 		Transaction newTrans = new Transaction(transactionNumber, amount, description, 
@@ -80,31 +149,36 @@ public class TransactionManager {
 		return true;
 	}
 	
+	
+	/**
+	 * Creates and returns a  list of accounts within the bank
+	 * 
+	 * @param bankID {@link #banks} index
+	 * @return Array of accounts within bank
+	 */
+	public String[] getAccounts(int bankID) {
+		int numAccounts = accounts.get(bankID).size();
+		String[] result = new String[numAccounts];
+		for (int i = 0; i < numAccounts; i++) {
+			result[i] = accounts.get(bankID).get(i);
+		}
+		return result;
+	}
+	
+	public String[] getAllBanks() {
+		int numBanks = banks.size();
+		String[] b = new String[numBanks];
+		for (int i = 0; i < numBanks; i++) {
+			b[i] = banks.get(i);
+		}
+		return b;
+	}
+	
 	public String getBankName(int bankID) {
 		if (bankID < 0 || bankID > banks.size()) {
 			return null;
 		}
 		return banks.get(bankID);
-	}
-	
-	public static boolean addCategory(String category) {
-		//check category doesn't exist already
-		for(int i = 0; i < categories.size(); i++) {
-			if(category.equals(categories.get(i))) {
-				return false;
-			}
-		}
-		categories.add(category);
-		return true;
-	}
-	
-	public String[] getIndividualTransactionHeader() {
-		String[] exportedCategories = new String[4];
-		exportedCategories[0] = "Date";
-		exportedCategories[1] = "Category";
-		exportedCategories[2] = "Description";
-		exportedCategories[3] = "Amount";
-		return exportedCategories;
 	}
 	
 	public String[] getCategories() {
@@ -121,6 +195,40 @@ public class TransactionManager {
 		exportedCategories[arraySize-1] = "Total";
 		return exportedCategories;
 	}
+
+	public String getCategory(int index) {
+		return categories.get(index);
+		
+	}
+
+	public int getCategoryByIndex(String cell) {
+		for (int i = 0; i < categories.size(); i++) {
+			if (cell.equals(categories.get(i))) {
+				return i;
+			}
+		}
+		return 0;
+	}
+
+	public String[] getIndividualTransactionHeader() {
+		String[] exportedCategories = new String[4];
+		exportedCategories[0] = "Date";
+		exportedCategories[1] = "Category";
+		exportedCategories[2] = "Description";
+		exportedCategories[3] = "Amount";
+		return exportedCategories;
+	}
+	
+	public Double[] getNewTransactionIndexes() {
+		int totalTransactions = transactions.size();
+		ArrayList<Double> result = new ArrayList<Double>();
+		for(int i = 0; i < totalTransactions; i++) {
+			if (transactions.get(i).isNewImport()) {
+				result.add(transactions.get(i).getTransactionNumber());
+			}
+		}
+		return result.toArray(new Double[result.size()]);
+	}
 	
 	public String[][] getNewTransactions() {
 		int totalTransactions = transactions.size();
@@ -136,70 +244,25 @@ public class TransactionManager {
 		}
 		return exportedTransactions;
 	}
-
-	public String[] getAllBanks() {
-		int numBanks = banks.size();
-		String[] b = new String[numBanks];
-		for (int i = 0; i < numBanks; i++) {
-			b[i] = banks.get(i);
-		}
-		return b;
+	
+	public int getNumberOfBanks() {
+		return banks.size();
 	}
 
-	public static void addAccount(int bankID, String accountName) {
-		if (accounts.size() < 1) {
-			accounts.add(new ArrayList<String>());
-		}
-		if (accounts.size() <= bankID) {
-			accounts.add(new ArrayList<String>());
-		}
-		accounts.get(bankID).add(accountName);
-	}
-
-	public String[] getAccounts(int bankID) {
-		int numAccounts = accounts.get(bankID).size();
-		String[] result = new String[numAccounts];
-		for (int i = 0; i < numAccounts; i++) {
-			result[i] = accounts.get(bankID).get(i);
-		}
-		return result;
+	public int getNumberOfCategories() {
+		return categories.size();
 	}
 	
 	public double getNumberOfTransactions() {
 		return transactions.size();
 	}
-	
-	public int getNumberOfCategories() {
-		return categories.size();
-	}
-	
+
 	public Transaction getTransaction(int transactionIndex) {
 		return transactions.get(transactionIndex);
 	}
 
-	public int getCategoryByIndex(String cell) {
-		for (int i = 0; i < categories.size(); i++) {
-			if (cell.equals(categories.get(i))) {
-				return i;
-			}
-		}
-		return 0;
-	}
-	
-	public String getCategory(int index) {
-		return categories.get(index);
-		
-	}
-
-	public Double[] getNewTransactionIndexes() {
-		int totalTransactions = transactions.size();
-		ArrayList<Double> result = new ArrayList<Double>();
-		for(int i = 0; i < totalTransactions; i++) {
-			if (transactions.get(i).isNewImport()) {
-				result.add(transactions.get(i).getTransactionNumber());
-			}
-		}
-		return result.toArray(new Double[result.size()]);
+	public String getUserName(){
+		return TransactionManager.uName;
 	}
 
 	public void setTransaction(TransactionAttribute attr, double accountIndex, Object value) {
@@ -237,12 +300,8 @@ public class TransactionManager {
 		}
 	}
 
-	public int getNumberOfBanks() {
-		return banks.size();
-	}
-
-	public static void addBank(String bankName) {
-		banks.add(bankName);
+	public void setUserName(String name){
+		TransactionManager.uName = name;
 	}
 
 }
