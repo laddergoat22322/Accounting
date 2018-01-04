@@ -54,6 +54,8 @@ public class Transaction {
 		this.accountID = accountID;
 		this.newImport = newImport;
 		
+		this.date.setFirstDayOfWeek(Calendar.MONDAY);
+		
 	}
 	
 	
@@ -77,6 +79,16 @@ public class Transaction {
 	}
 	
 	/** 
+	  * Get the {@link java.util.Calendar} of the {@link Transactions.Transaction}
+	  * 
+	  * @return {@link java.util.Calendar} of {@link Transactions.Transaction}
+	  */
+	public Calendar getCalendar() {
+		return this.date;
+	}
+	
+	
+	/** 
 	  * Get the {@link Transactions.Transaction} category index for {@link Transactions.TransactionManager#categories}.
 	  * 
 	  * @return {@link Transactions.Transaction} category index
@@ -84,7 +96,6 @@ public class Transaction {
 	public int getCategory() {
 		return categoryID;
 	}
-	
 	
 	/** 
 	  * Get the {@link java.util.Date} of the {@link Transactions.Transaction}

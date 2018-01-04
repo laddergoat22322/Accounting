@@ -2,3 +2,5 @@
 /TransactionManager.class
 /TransactionManager$Transaction.class
 /TransactionManager$TransactionAttribute.class
+/TransactionAnalytics.class
+/TransactionAnalytics$Analyse.class

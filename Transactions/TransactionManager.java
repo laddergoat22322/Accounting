@@ -19,11 +19,12 @@ public class TransactionManager {
 		NEWIMPORT,
 		TRANSACTION_ID;
 	}
-	private static ArrayList<ArrayList<String>> accounts;
-	private static ArrayList<String> banks;
-	private static ArrayList<String> categories;
-	private static TransactionManager tm;
-	private static ArrayList<Transaction> transactions;
+	protected static ArrayList<ArrayList<String>> accounts;
+	protected static ArrayList<String> banks;
+	protected static ArrayList<String> categories;
+	private static TransactionAnalytics ta;
+	protected static TransactionManager tm;
+	protected static ArrayList<Transaction> transactions;
 	private static String uName;
 	
 	
@@ -303,5 +304,4 @@ public class TransactionManager {
 	public void setUserName(String name){
 		TransactionManager.uName = name;
 	}
-
 }
