@@ -20,27 +20,18 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileSystemView;
 
 import Transactions.TransactionManager;
+import mainGUI.GUI;
 
-public class ImportSelectGUI {
+public class ImportSelectGUI extends GUI {
 	
 	private JFrame frame;
 	private JPanel thePanel;
 	private int bankID;
 	private int fileType;
-	private String fileLoc;
 	private int accountID;
-	private TransactionManager tm;
 	
 	public ImportSelectGUI() {
 		initialize();
-	}
-	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				new ImportSelectGUI();
-			}
-		});
 	}
 
 	private void initialize() {
@@ -49,12 +40,11 @@ public class ImportSelectGUI {
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setResizable(false);
-		frame.setTitle("Accounting Program - By Matthew Janssen");
+		frame.setTitle("Import new transactions");
 		
 		thePanel = new JPanel();
 		thePanel.setLayout(new GridBagLayout());
 		
-		this.tm = TransactionManager.getInstance();
 		createPanelComponents();
 		
 		frame.add(thePanel);
@@ -62,25 +52,14 @@ public class ImportSelectGUI {
 	}
 	
 	private void createPanelComponents() {
-		GridBagConstraints c = new GridBagConstraints();
-		Font font = new Font("Tahoma", Font.PLAIN, 15);
+		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 3);
 		String[] accounts = tm.getAccounts(0);
 		JComboBox<String> cb2 = new JComboBox<String>(accounts);
 		
-		c.gridx = 1;
-		c.gridy = 1;
-		c.gridheight = 1;
-		c.gridwidth = 3;
-		c.weightx = 1;
-		c.weighty = 1;
-		c.anchor = GridBagConstraints.CENTER;
-		
-		JLabel headerLabel = new JLabel("Select bank");
-		headerLabel.setFont(new Font("Tahoma", Font.BOLD, 25));
+		JLabel headerLabel = createLabel("Select Bank", largeFont);
 		thePanel.add(headerLabel, c);
 		
-		JLabel bankLabel = new JLabel("Bank");
-		bankLabel.setFont(font);
+		JLabel bankLabel = createLabel("Bank", mediumFont);
 		c.gridwidth = 1;
 		c.gridy++;
 		c.ipadx = 20;
@@ -93,10 +72,11 @@ public class ImportSelectGUI {
 	    preferredSize.height = 30;
 	    preferredSize.width = 450;
 	    cb1.setPreferredSize(preferredSize);
-		cb1.setFont(font);
+		cb1.setFont(mediumFont);
 		c.ipadx = 0;
-		c.gridx = 2;
+		c.gridx++;
 		c.anchor = GridBagConstraints.WEST;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		cb1.addActionListener(new ActionListener(){
 
 			@Override
@@ -111,42 +91,45 @@ public class ImportSelectGUI {
 		});
 		thePanel.add(cb1, c);
 		
-		JLabel accountLabel = new JLabel("Account");
-		accountLabel.setFont(font);
-		c.gridx = 1;
+		JLabel accountLabel = createLabel("Account", mediumFont);
+		c.gridx = 0;
 		c.gridy++;
 		c.ipadx = 20;
 		c.anchor = GridBagConstraints.EAST;
+		c.fill = GridBagConstraints.NONE;
 		thePanel.add(accountLabel, c);
 		
 	    cb2.setPreferredSize(preferredSize);
-		cb2.setFont(font);
+		cb2.setFont(mediumFont);
+		c.gridx++;
 		c.ipadx = 0;
-		c.gridx = 2;
 		c.anchor = GridBagConstraints.WEST;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		thePanel.add(cb2, c);
 		
-		JLabel fileLabel = new JLabel("File Location");
-		fileLabel.setFont(font);
-		c.gridx = 1;
+		JLabel fileLabel = createLabel("File Location", mediumFont);
+		c.gridx = 0;
 		c.gridy++;
 		c.ipadx = 20;
 		c.anchor = GridBagConstraints.EAST;
+		c.fill = GridBagConstraints.NONE;
 		thePanel.add(fileLabel, c);
 		
 		JTextField tf = new JTextField();
 	    tf.setPreferredSize(preferredSize);
-		tf.setFont(font);
+		tf.setFont(mediumFont);
 		c.gridx++;
 		c.ipadx = 0;
 		c.anchor = GridBagConstraints.WEST;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		tf.setText("C:/Users/matth/Downloads/CSVData.csv");
 		thePanel.add(tf, c);
 		
 		JButton findFileButton = new JButton("Select...");
-		findFileButton.setPreferredSize(new Dimension(80, 22));
-		c.gridx = 3;
+		findFileButton.setPreferredSize(new Dimension(80, 30));
+		c.gridx++;
 		c.anchor = GridBagConstraints.WEST;
+		c.fill = GridBagConstraints.NONE;
 		thePanel.add(findFileButton, c);
 		findFileButton.addActionListener(new ActionListener() {
 			

@@ -110,7 +110,7 @@ public class TransactionManager {
 //		addCategory("Miscellaneous");
 //		addCategory("Going Away");
 		
-//		addBank("ANZ");
+		addBank("ANZ");
 //		addBank("Commonwealth");
 		
 //		addAccount(0, "Spendings");

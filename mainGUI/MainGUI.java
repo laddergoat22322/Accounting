@@ -6,50 +6,42 @@ package mainGUI;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
+import Add_Remove_Components.AddNewAccountGUI;
 import Import_Export.ImportSelectGUI;
 import Transactions.TransactionAnalytics;
 import Transactions.TransactionManager;
 
-import java.text.ParseException;
-import java.util.Arrays;
-import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
-
 @SuppressWarnings("serial")
-public class MainGUI extends JFrame {
-	private String fileLoc;
+public class MainGUI extends GUI {
 	private JFrame frame;
-	private Font headerFont;  
-    private JMenuItem i1, i2;
-    private Font largeFont;
-    private Font largeHeaderFont;
-    private Font mediumFont;
-    private JMenu menu;
-    private Font smallFont;
-    private TransactionAnalytics ta;
-	private TransactionManager tm;
 
-	/**
-	 * Create the application.
-	 * @throws ParseException 
-	 */
+
 	public MainGUI() {
-		this.tm = TransactionManager.getInstance();
-		fileLoc = "C:/Accounting Program/Data.xml";
-		ta = new TransactionAnalytics();
+		super();
 		initialize();
 	}
 
 	private JPanel createBankTotalsPanel() {
-		JPanel panel = createPanel();
+		JPanel panel = createBorderedPanel();
 		
 		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 2);
 		
@@ -85,7 +77,7 @@ public class MainGUI extends JFrame {
 	}
 
 	private JPanel createCategoryTotalsPanel() {
-		JPanel panel = createPanel();
+		JPanel panel = createBorderedPanel();
 		
 		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 2);
 		
@@ -111,47 +103,40 @@ public class MainGUI extends JFrame {
 		return panel;
 	}
 
-	private JLabel createLabel(String labelName, Font font) {
-		JLabel label = new JLabel(labelName);
-		label.setFont(font);
-		return label;
-	}
-
-	private void createMenu() {  
-          JMenuBar mb=new JMenuBar();  
-          menu=new JMenu("File"); 
-          menu.setPreferredSize(new Dimension(80, 30));
-          menu.setFont(new Font("Tahoma", Font.PLAIN, 18));
-          i1 = createMenuItem("Import");
-          i1.addActionListener(new ActionListener() {
-        	  public void actionPerformed(ActionEvent e) {
-        		  new ImportSelectGUI();
-        	  }
-          });;
-          i2 = createMenuItem("Settings");
-          menu.add(i1); menu.add(i2);
-          mb.add(menu);  
-          frame.setJMenuBar(mb);  
+	private void createMenuBar() {
 		
-	}
-
-	private JMenuItem createMenuItem(String name) {
-		JMenuItem item=new JMenuItem(name);
-        item.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        item.setPreferredSize(new Dimension(120, 30));
-        return item;
-	}
-
-	private JPanel createPanel() {
-		JPanel panel = new JPanel();
-		Border blackline = BorderFactory.createEtchedBorder(EtchedBorder.RAISED);
-		panel.setLayout(new GridBagLayout());
-		panel.setBorder(blackline);
-		return panel;
-	}
+		JMenu fileMenu, addMenu;
+		JMenuItem newImport, settings, addAccount;
+		
+		/** Create MenuBar*/
+		JMenuBar mb=new JMenuBar();  
+		fileMenu = createMenu("File", new Dimension(80, 30));
+		  
+		newImport = createMenuItem("Import");
+		newImport.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			new ImportSelectGUI();
+		}});
+		
+		settings = createMenuItem("Settings");
+		fileMenu.add(newImport); fileMenu.add(settings);
+		
+		addMenu = createMenu("Add/Remove", new Dimension(120, 30));
+		addAccount = createMenuItem("Add Account");
+		addAccount.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			new AddNewAccountGUI();	
+		}});
+		
+		addMenu.add(addAccount);
+		
+		mb.add(fileMenu); 
+		mb.add(addMenu);
+		frame.setJMenuBar(mb);  
+		}
 
 	private JPanel createSavingsTotalsPanel() {
-		JPanel panel = createPanel();
+		JPanel panel = createBorderedPanel();
 		
 		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 1);
 		
@@ -161,7 +146,7 @@ public class MainGUI extends JFrame {
 	}
 
 	private JPanel createWeeklyTotalsPanel() {
-		JPanel panel = createPanel();
+		JPanel panel = createBorderedPanel();
 		
 		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 1);
 		
@@ -188,16 +173,6 @@ public class MainGUI extends JFrame {
 	}
 	
 	private void initialize() {
-		try {
-		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-		        if ("Nimbus".equals(info.getName())) {
-		            UIManager.setLookAndFeel(info.getClassName());
-		            break;
-		        }
-		    }
-		} catch (Exception e) {
-		    // If Nimbus is not available, you can set the GUI to another look and feel.
-		}
 		frame = new JFrame();
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -207,7 +182,6 @@ public class MainGUI extends JFrame {
 		frame.setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.BOTH, 3);
-		setupFonts();
 		
 		JLabel headerLabel = createLabel("Totals", largeHeaderFont);
 		JPanel headerPanel = new JPanel();
@@ -235,31 +209,9 @@ public class MainGUI extends JFrame {
 		c.gridwidth = 3;
 		frame.add(weeklyTotalsPanel, c);
 		
-		createMenu();
+		createMenuBar();
 		
 		
 		frame.setVisible(true);
-	}
-
-	private void setupFonts() {
-		largeHeaderFont = new Font("SansSerif", Font.BOLD, 35);
-		headerFont = new Font("SansSerif", Font.BOLD, 25);
-		largeFont = new Font("SansSerif", Font.BOLD, 25);
-		mediumFont = new Font("SansSerif", Font.PLAIN, 20);
-		smallFont = new Font("SansSerif", Font.PLAIN, 15);
-		
-	}
-	
-	private GridBagConstraints setupGridBag(int anchor, int fill, int width) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridheight = 1;
-		c.gridwidth = width;
-		c.weightx = 1;
-		c.weighty = 1;
-		c.anchor = anchor;
-		c.fill = fill;
-		return c;
 	}
 }

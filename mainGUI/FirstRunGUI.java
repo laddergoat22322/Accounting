@@ -2,7 +2,6 @@ package mainGUI;
 
 
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,8 +17,7 @@ import javax.swing.JTextField;
 
 import Transactions.TransactionManager;
 
-@SuppressWarnings("serial")
-public class FirstRunGUI extends JFrame {
+public class FirstRunGUI extends GUI {
 	private JFrame frame;
 	private JPanel thePanel;
 	
@@ -29,65 +27,31 @@ public class FirstRunGUI extends JFrame {
 	public FirstRunGUI() {
 		initialize();
 	}
-	
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				new FirstRunGUI();
-//			}
-//		});
-//	}
-
-	private void initialize() {
-		frame = new JFrame();
-		frame.setSize(1000,600);
-		frame.setLocationRelativeTo(null);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(false);
-		frame.setTitle("Accounting Program - By Matthew Janssen");
-		
-		thePanel = new JPanel();
-		thePanel.setLayout(new GridBagLayout());
-		
-		createPanelComponents();
-		
-		frame.add(thePanel);
-		frame.setVisible(true);
-	}
 
 	private void createPanelComponents() {
-		GridBagConstraints c = new GridBagConstraints();
+		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.VERTICAL, 2);
 		
-		c.gridx = 1;
-		c.gridy = 1;
-		c.gridheight = 1;
-		c.gridwidth = 2;
-		c.weightx = 1;
-		c.weighty = 1;
-		c.anchor = GridBagConstraints.CENTER;
-		
-		JLabel welcomeLabel = new JLabel("Welcome!");
-		welcomeLabel.setFont(new Font("Tahoma", Font.BOLD, 29));
+		JLabel welcomeLabel = createLabel("Welcome!", largeHeaderFont);
 		thePanel.add(welcomeLabel, c);
 		
-		JLabel nameLabel = new JLabel("Please enter your name:");
-		nameLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		c.gridy = 2;
+		JLabel nameLabel = createLabel("Please enter your name:", mediumFont);
+		c.gridy++;
 		c.gridwidth = 1;
 		c.anchor = GridBagConstraints.EAST;
 		c.ipadx = 20;
+		c.fill = GridBagConstraints.NONE;
 		thePanel.add(nameLabel, c);
 		
 		JTextField tf = new JTextField(20);
 		tf.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		c.gridx = 2;
+		c.gridx++;
 		c.anchor = GridBagConstraints.WEST;
 		thePanel.add(tf, c);
 		
 		JButton enterBut = new JButton("Enter");
 		enterBut.setPreferredSize(new Dimension(120, 50));
-		c.gridy = 3;
-		c.gridx = 1;
+		c.gridy++;
+		c.gridx = 0;
 		c.ipadx = 0;
 		c.anchor = GridBagConstraints.CENTER;
 		c.gridwidth = 2;
@@ -110,6 +74,23 @@ public class FirstRunGUI extends JFrame {
 			}
 		});
 		
+	}
+
+	private void initialize() {
+		frame = new JFrame();
+		frame.setSize(1000,600);
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		frame.setTitle("Accounting Program - By Matthew Janssen");
+		
+		thePanel = new JPanel();
+		thePanel.setLayout(new GridBagLayout());
+		
+		createPanelComponents();
+		
+		frame.add(thePanel);
+		frame.setVisible(true);
 	}
 }
 	
