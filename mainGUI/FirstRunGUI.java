@@ -25,7 +25,10 @@ public class FirstRunGUI extends GUI {
 	 * Constructor.
 	 */
 	public FirstRunGUI() {
+		super();
 		initialize();
+		TransactionManager.addCategory("Food");
+		TransactionManager.analyseData();
 	}
 
 	private void createPanelComponents() {
@@ -66,8 +69,7 @@ public class FirstRunGUI extends GUI {
 						    JOptionPane.ERROR_MESSAGE);
 				}
 				else {
-					TransactionManager tm = TransactionManager.getInstance();
-					tm.setUserName(tf.getText());
+					TransactionManager.setUserName(tf.getText());
 					frame.dispose();
 					new MainGUI();
 				}

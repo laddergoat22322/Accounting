@@ -5,41 +5,36 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.filechooser.FileSystemView;
 
-import Import_Export.ImportTransactions;
-import Import_Export.ImportTransactionsGUI;
 import Transactions.TransactionManager;
 import mainGUI.GUI;
 
-public class AddNewAccountGUI extends GUI{
+public class AddCategoryGUI extends GUI{
 	
 	private JFrame frame;
 	private int bankID;
 	private int accountID;
 	
-	public AddNewAccountGUI() {
+	public AddCategoryGUI() {
 		initialise();
 	}
 	
 	private void initialise() {
 		frame = new JFrame();
-		frame.setSize(800,350);
+		frame.setSize(600,300);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setResizable(false);
-		frame.setTitle("New Account");
+		frame.setTitle("New Category");
 		
 		JPanel panel = createPanelWithComponents();
 		
@@ -52,44 +47,27 @@ public class AddNewAccountGUI extends GUI{
 		panel.setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 3);
-		String[] accounts = TransactionManager.getAccounts(0);
 		
-		JLabel headerLabel = createLabel("Add New Bank Account", largeFont);
+		JLabel headerLabel = createLabel("Add New Category", largeFont);
 		panel.add(headerLabel, c);
 		
-		JLabel bankLabel = createLabel("Bank", mediumFont);
+		JLabel fileLabel = createLabel("Category Name", mediumFont);
 		c.gridwidth = 1;
 		c.gridy++;
 		c.ipadx = 20;
-		c.anchor = GridBagConstraints.EAST;
-		panel.add(bankLabel, c);
-		
-		String[] banks = TransactionManager.getAllBanks();
-		JComboBox<String> cb1 = new JComboBox<String>(banks);
-		Dimension preferredSize = cb1.getPreferredSize();
-	    preferredSize.height = 30;
-	    preferredSize.width = 450;
-	    cb1.setPreferredSize(preferredSize);
-		cb1.setFont(mediumFont);
-		c.gridx++;
-		c.anchor = GridBagConstraints.WEST;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		panel.add(cb1, c);
-		
-		JLabel fileLabel = createLabel("Account Name", mediumFont);
-		c.gridx = 0;
-		c.gridy++;
 		c.anchor = GridBagConstraints.EAST;
 		c.fill = GridBagConstraints.NONE;
 		panel.add(fileLabel, c);
 		
 		JTextField tf = new JTextField();
+		Dimension preferredSize = new Dimension(300, 30);
 	    tf.setPreferredSize(preferredSize);
 		tf.setFont(mediumFont);
 		c.gridx++;
 		c.anchor = GridBagConstraints.WEST;
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.fill = GridBagConstraints.NONE;
 		panel.add(tf, c);
+		
 		
 		JButton enterButton = new JButton("Done");
 		enterButton.setPreferredSize(new Dimension(120, 45));
@@ -111,8 +89,10 @@ public class AddNewAccountGUI extends GUI{
 						    JOptionPane.ERROR_MESSAGE);
 				}
 				else {
-					bankID = cb1.getSelectedIndex();
-					TransactionManager.addAccount(bankID, text);
+					TransactionManager.addCategory(text);
+					System.out.println("Added category");
+					TransactionManager.analyseData();
+					GUI.refreshMain = true;
 					frame.dispose();
 				}
 				

@@ -8,19 +8,18 @@ import java.util.Date;
 
 public class TransactionAnalytics extends TransactionManager{
 	
-	private ArrayList<Double> categoryTotal;
-	private ArrayList<ArrayList<Double>> categoryWeeklyTotal;
-	private ArrayList<Double> bankTotal;
-	private ArrayList<ArrayList<Double>> accountTotal;
+	private static ArrayList<Double> categoryTotal;
+	private static ArrayList<ArrayList<Double>> categoryWeeklyTotal;
+	private static ArrayList<Double> bankTotal;
+	private static ArrayList<ArrayList<Double>> accountTotal;
 	
 	public TransactionAnalytics() 
 	{
-		super();
 		setupAnalytics();
 		analyseData();
 	}
 
-	private void setupAnalytics() {		
+	public void setupAnalytics() {		
 		/** Initialise categoryTotal*/
 		categoryTotal = new ArrayList<Double>();
 		for(int i = 0; i < categories.size(); i++) {
@@ -48,10 +47,12 @@ public class TransactionAnalytics extends TransactionManager{
 			for(int j = 0; j < accounts.get(i).size(); j++) {
 				accountTotal.get(i).add((double) 0);
 			}
-		}		
+		}
+		analyseData();
 	}
 
-	public void analyseData() {
+	public static void analyseData() {
+		tm = TransactionManager.getInstance();
 		for(int i = 0; i < transactions.size(); i++) 
 		{
 			Transaction t = transactions.get(i);
@@ -75,17 +76,17 @@ public class TransactionAnalytics extends TransactionManager{
 		}
 	}
 
-	private void updateAccount(int account, int bank, double amount) {
+	private static void updateAccount(int account, int bank, double amount) {
 		double old = accountTotal.get(bank).get(account);
 		accountTotal.get(bank).set(account, old + amount);
 	}
 
-	private void updateBank(int bank, double amount) {
+	private static void updateBank(int bank, double amount) {
 		double old = bankTotal.get(bank);
 		bankTotal.set(bank, old + amount);
 	}
 
-	private void updateCategory(int category, double amount, Calendar cal) {
+	private static void updateCategory(int category, double amount, Calendar cal) {
 		
 		/** Set category total*/
 		double oldTotal = categoryTotal.get(category);
@@ -98,15 +99,15 @@ public class TransactionAnalytics extends TransactionManager{
 		//System.out.println(category + ", " + transactionWeek + ", " +categoryWeeklyTotal.get(transactionWeek).get(category));
 	}
 
-	public String getCategoryTotal(int category) {
+	public static String getCategoryTotal(int category) {
 		return Double.toString(Math.abs(categoryTotal.get(category)));
 	}
 
-	public String getAccountTotal(int bank, int account) {
+	public static String getAccountTotal(int bank, int account) {
 		return Double.toString(accountTotal.get(bank).get(account));
 	}
 
-	public String[][] getWeeklyTotals() {
+	public static String[][] getWeeklyTotals() {
 		 String[][] result;
 		 Calendar cal = Calendar.getInstance();
 		 cal.setFirstDayOfWeek(Calendar.MONDAY);
@@ -141,7 +142,7 @@ public class TransactionAnalytics extends TransactionManager{
 		return result;
 	}
 	
-	public String[] getWeeklyTotalsHeader() {
+	public static String[] getWeeklyTotalsHeader() {
 		int headerLength = categories.size() + 2;
 		String[] result = new String[headerLength];
 		result[0] = "Date";

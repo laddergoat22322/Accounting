@@ -19,20 +19,18 @@ import Transactions.TransactionAnalytics;
 import Transactions.TransactionManager;
 
 public class GUI {
-	protected String fileLoc;
-    protected Font largeHeaderFont, headerFont, largeFont, mediumFont, smallFont, menuFont;
-	protected TransactionAnalytics ta;
-	protected TransactionManager tm;
+	protected static String fileLoc;
+    protected static Font largeHeaderFont, headerFont, largeFont, mediumFont, smallFont, menuFont;
+	protected static boolean refreshMain;
 	
 	public GUI() {
-		tm = TransactionManager.getInstance();
 		fileLoc = "C:/Accounting Program/Data.xml";
-		ta = new TransactionAnalytics();
 		setupFonts();
 		setupUIManager();
+		refreshMain = false;
 	}
 	
-	private void setupUIManager() {
+	private static void setupUIManager() {
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
@@ -46,27 +44,27 @@ public class GUI {
 		
 	}
 
-	protected JMenuItem createMenuItem(String name) {
+	protected static JMenuItem createMenuItem(String name) {
 		JMenuItem item=new JMenuItem(name);
 	    item.setFont(new Font("Tahoma", Font.PLAIN, 15));
 	    item.setPreferredSize(new Dimension(120, 30));
 	    return item;
 	}
 	
-	protected JLabel createLabel(String labelName, Font font) {
+	protected static JLabel createLabel(String labelName, Font font) {
 		JLabel label = new JLabel(labelName);
 		label.setFont(font);
 		return label;
 	}
 	
-	protected JMenu createMenu(String name, Dimension dimension) {
+	protected static JMenu createMenu(String name, Dimension dimension) {
 		JMenu m = new JMenu(name);
 		m.setPreferredSize(dimension);
 		m.setFont(menuFont);
 		return m;
 	}
 	
-	private void setupFonts() {
+	private static void setupFonts() {
 		largeHeaderFont = new Font("SansSerif", Font.BOLD, 35);
 		headerFont = new Font("SansSerif", Font.BOLD, 25);
 		largeFont = new Font("SansSerif", Font.BOLD, 25);
@@ -75,7 +73,7 @@ public class GUI {
 		menuFont = new Font("SansSerif", Font.PLAIN, 17);
 	}
 	
-	protected JPanel createBorderedPanel() {
+	protected static JPanel createBorderedPanel() {
 		JPanel panel = new JPanel();
 		Border blackline = BorderFactory.createEtchedBorder(EtchedBorder.RAISED);
 		panel.setLayout(new GridBagLayout());
@@ -83,7 +81,7 @@ public class GUI {
 		return panel;
 	}
 	
-	protected GridBagConstraints setupGridBag(int anchor, int fill, int width) {
+	protected static GridBagConstraints setupGridBag(int anchor, int fill, int width) {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;

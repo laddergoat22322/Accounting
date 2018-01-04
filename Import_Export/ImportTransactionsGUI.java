@@ -11,6 +11,7 @@ import javax.swing.table.TableColumn;
 
 import Transactions.TransactionManager;
 import Transactions.TransactionManager.TransactionAttribute;
+import mainGUI.GUI;
 
 import java.text.ParseException;
 import java.awt.Font;
@@ -19,24 +20,12 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ImportTransactionsGUI{
+public class ImportTransactionsGUI extends GUI{
 	private JFrame frame;
 	private JPanel thePanel;
 	private Font defaultFont;
-	private TransactionManager tm;
 	private JTable table;
 	private Double[] transactionIndex;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				new ImportTransactionsGUI();
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
@@ -50,21 +39,14 @@ public class ImportTransactionsGUI{
 	 * Initialize the contents of the frame.
 	 * @throws ParseException 
 	 */
-	private void initialize() {
-		
-		//Initialize Transaction Manager
-		this.tm = TransactionManager.getInstance();
-		
-		//default font
-		defaultFont = new Font("Tahoma", Font.PLAIN, 15);
-		
+	private void initialize() {		
 		//Initialize GUI
 		frame = new JFrame();
 		frame.setSize(1200,900);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(true);
-		frame.setTitle("Accounting Program - By " + tm.getUserName());
+		frame.setTitle(TransactionManager.getUserName() + "'s Accounting Program");
 		
 		createGUIComponents();
 		
@@ -78,36 +60,27 @@ public class ImportTransactionsGUI{
 		thePanel = new JPanel();
 		thePanel.setLayout(new GridBagLayout());
 		
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 1;
-		c.gridy = 1;
-		c.gridheight = 1;
-		c.gridwidth = 3;
-		c.weightx = 1;
-		c.weighty = 1;
-		c.anchor = GridBagConstraints.CENTER;
+		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 3);
 		
-		JLabel headerLabel = new JLabel("Imported Transactions");
-		headerLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
-		headerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		JLabel headerLabel = createLabel("Imported Transactions", largeFont);
 		thePanel.add(headerLabel, c);
 		
 		//Initialize JComboBox
-		String[] categories = tm.getCategories();
+		String[] categories = TransactionManager.getCategories();
 		JComboBox<String> combo = new JComboBox<String>(categories);
-		combo.setFont(defaultFont);		
+		combo.setFont(mediumFont);
 		
 		//Initialize JTable
-		String[][] data = tm.getNewTransactions();
-		String[] header = tm.getIndividualTransactionHeader();
-		transactionIndex = tm.getNewTransactionIndexes();
+		String[][] data = TransactionManager.getNewTransactions();
+		String[] header = TransactionManager.getIndividualTransactionHeader();
+		transactionIndex = TransactionManager.getNewTransactionIndexes();
 		table = new JTable(data,header){
 			  public boolean isCellEditable(int row,int column){
 				    if(column < 1 || column > 1) return false;
 				    return true;
 			  }
 		};
-		table.setFont(defaultFont);
+		table.setFont(mediumFont);
 		table.setRowHeight(20);
 		
 		TableColumn col = table.getColumnModel().getColumn(1);
@@ -160,8 +133,8 @@ public class ImportTransactionsGUI{
 		int numRows = table.getRowCount();
 		for(int i = 0; i < numRows; i++) {
 			String cell = (String) table.getModel().getValueAt(i, 1);
-			int categoryIndex = tm.getCategoryByIndex(cell);
-			tm.setTransaction(TransactionAttribute.ACCOUNT_ID, transactionIndex[i], categoryIndex);
+			int categoryIndex = TransactionManager.getCategoryByIndex(cell);
+			TransactionManager.setTransaction(TransactionAttribute.ACCOUNT_ID, transactionIndex[i], categoryIndex);
 		}
 	}
 	

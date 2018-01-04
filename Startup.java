@@ -2,6 +2,7 @@ import java.awt.EventQueue;
 import java.io.File;
 
 import Import_Export.UserDataImport;
+import Transactions.TransactionManager;
 import mainGUI.*;
 
 public class Startup {
@@ -14,10 +15,13 @@ public class Startup {
 			File tmpDir = new File("C:/Accounting Program/Data.xml");
 			boolean exists = tmpDir.exists();
 			if (exists) {
+				TransactionManager.getInstance();
 				new UserDataImport();
+				TransactionManager.analyseData();
 				new MainGUI();
 			}
 			else {
+				TransactionManager.getInstance();
 				new FirstRunGUI();
 			}
 		}

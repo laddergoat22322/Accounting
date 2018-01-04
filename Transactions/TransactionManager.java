@@ -22,7 +22,7 @@ public class TransactionManager {
 	protected static ArrayList<ArrayList<String>> accounts;
 	protected static ArrayList<String> banks;
 	protected static ArrayList<String> categories;
-	private static TransactionAnalytics ta;
+	protected static TransactionAnalytics ta;
 	protected static TransactionManager tm;
 	protected static ArrayList<Transaction> transactions;
 	private static String uName;
@@ -102,13 +102,14 @@ public class TransactionManager {
 		banks = new ArrayList<String>();
 		accounts = new ArrayList<ArrayList<String>>();
 		accounts.add(new ArrayList<String>());
+		ta = new TransactionAnalytics();
 		
-//		addCategory("Uncategorized");
-//		addCategory("Food");
-//		addCategory("Car");
-//		addCategory("Home");
-//		addCategory("Miscellaneous");
-//		addCategory("Going Away");
+		addCategory("Uncategorized");
+		addCategory("Food");
+		addCategory("Car");
+		addCategory("Home");
+		addCategory("Miscellaneous");
+		addCategory("Going Away");
 		
 		addBank("ANZ");
 //		addBank("Commonwealth");
@@ -157,7 +158,7 @@ public class TransactionManager {
 	 * @param bankID {@link #banks} index
 	 * @return Array of accounts within bank
 	 */
-	public String[] getAccounts(int bankID) {
+	public static String[] getAccounts(int bankID) {
 		int numAccounts = accounts.get(bankID).size();
 		String[] result = new String[numAccounts];
 		for (int i = 0; i < numAccounts; i++) {
@@ -166,7 +167,7 @@ public class TransactionManager {
 		return result;
 	}
 	
-	public String[] getAllBanks() {
+	public static String[] getAllBanks() {
 		int numBanks = banks.size();
 		String[] b = new String[numBanks];
 		for (int i = 0; i < numBanks; i++) {
@@ -175,14 +176,14 @@ public class TransactionManager {
 		return b;
 	}
 	
-	public String getBankName(int bankID) {
+	public static String getBankName(int bankID) {
 		if (bankID < 0 || bankID > banks.size()) {
 			return null;
 		}
 		return banks.get(bankID);
 	}
 	
-	public String[] getCategories() {
+	public static String[] getCategories() {
 		return categories.toArray(new String[categories.size()]);
 	}
 	
@@ -197,12 +198,12 @@ public class TransactionManager {
 		return exportedCategories;
 	}
 
-	public String getCategory(int index) {
+	public static String getCategory(int index) {
 		return categories.get(index);
 		
 	}
 
-	public int getCategoryByIndex(String cell) {
+	public static int getCategoryByIndex(String cell) {
 		for (int i = 0; i < categories.size(); i++) {
 			if (cell.equals(categories.get(i))) {
 				return i;
@@ -211,7 +212,7 @@ public class TransactionManager {
 		return 0;
 	}
 
-	public String[] getIndividualTransactionHeader() {
+	public static String[] getIndividualTransactionHeader() {
 		String[] exportedCategories = new String[4];
 		exportedCategories[0] = "Date";
 		exportedCategories[1] = "Category";
@@ -220,7 +221,7 @@ public class TransactionManager {
 		return exportedCategories;
 	}
 	
-	public Double[] getNewTransactionIndexes() {
+	public static Double[] getNewTransactionIndexes() {
 		int totalTransactions = transactions.size();
 		ArrayList<Double> result = new ArrayList<Double>();
 		for(int i = 0; i < totalTransactions; i++) {
@@ -231,7 +232,7 @@ public class TransactionManager {
 		return result.toArray(new Double[result.size()]);
 	}
 	
-	public String[][] getNewTransactions() {
+	public static String[][] getNewTransactions() {
 		int totalTransactions = transactions.size();
 		String[][] exportedTransactions = new String[totalTransactions][5];
 		for(int i = 0; i < totalTransactions; i++) {
@@ -246,11 +247,11 @@ public class TransactionManager {
 		return exportedTransactions;
 	}
 	
-	public int getNumberOfBanks() {
+	public static int getNumberOfBanks() {
 		return banks.size();
 	}
 
-	public int getNumberOfCategories() {
+	public static int getNumberOfCategories() {
 		return categories.size();
 	}
 	
@@ -262,11 +263,11 @@ public class TransactionManager {
 		return transactions.get(transactionIndex);
 	}
 
-	public String getUserName(){
+	public static String getUserName(){
 		return TransactionManager.uName;
 	}
 
-	public void setTransaction(TransactionAttribute attr, double accountIndex, Object value) {
+	public static void setTransaction(TransactionAttribute attr, double accountIndex, Object value) {
 		switch(attr) {
 		case ACCOUNT_ID :
 			transactions.get((int) accountIndex).setCategory((int) value);
@@ -301,7 +302,33 @@ public class TransactionManager {
 		}
 	}
 
-	public void setUserName(String name){
+	public static void setUserName(String name){
 		TransactionManager.uName = name;
+	}
+
+
+	public static void analyseData() {
+		ta.setupAnalytics();
+		
+	}
+
+
+	public static String getAccountTotal(int bank, int account) {
+		return ta.getAccountTotal(bank, account);
+	}
+
+
+	public static String getCategoryTotal(int category) {
+		return ta.getCategoryTotal(category);
+	}
+
+
+	public static String[][] getWeeklyTotals() {
+		return ta.getWeeklyTotals();
+	}
+
+
+	public static String[] getWeeklyTotalsHeader() {
+		return ta.getWeeklyTotalsHeader();
 	}
 }

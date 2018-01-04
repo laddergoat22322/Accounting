@@ -53,7 +53,7 @@ public class ImportSelectGUI extends GUI {
 	
 	private void createPanelComponents() {
 		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 3);
-		String[] accounts = tm.getAccounts(0);
+		String[] accounts = TransactionManager.getAccounts(0);
 		JComboBox<String> cb2 = new JComboBox<String>(accounts);
 		
 		JLabel headerLabel = createLabel("Select Bank", largeFont);
@@ -66,7 +66,7 @@ public class ImportSelectGUI extends GUI {
 		c.anchor = GridBagConstraints.EAST;
 		thePanel.add(bankLabel, c);
 		
-		String[] banks = tm.getAllBanks();
+		String[] banks = TransactionManager.getAllBanks();
 		JComboBox<String> cb1 = new JComboBox<String>(banks);
 		Dimension preferredSize = cb1.getPreferredSize();
 	    preferredSize.height = 30;
@@ -81,7 +81,7 @@ public class ImportSelectGUI extends GUI {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String[] newAccounts = tm.getAccounts(cb1.getSelectedIndex());
+				String[] newAccounts = TransactionManager.getAccounts(cb1.getSelectedIndex());
 				cb2.removeAllItems();
 				for (String account : newAccounts) {
 					cb2.addItem(account);
