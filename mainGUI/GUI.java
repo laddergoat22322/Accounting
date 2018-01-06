@@ -21,13 +21,13 @@ import Transactions.TransactionManager;
 public class GUI {
 	protected static String fileLoc;
     protected static Font largeHeaderFont, headerFont, largeFont, mediumFont, smallFont, menuFont;
-	protected static boolean refreshMain;
+    protected static boolean guiRefresh;
 	
 	public GUI() {
+		guiRefresh = false;
 		fileLoc = "C:/Accounting Program/Data.xml";
 		setupFonts();
 		setupUIManager();
-		refreshMain = false;
 	}
 	
 	private static void setupUIManager() {

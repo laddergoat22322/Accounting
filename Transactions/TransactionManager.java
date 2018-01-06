@@ -80,9 +80,9 @@ public class TransactionManager {
 	
 	
 	/**
-	 * Initialises the class {@link Transactions.TransactionManager} if not already
-	 * initialised, keeping the usage of the class synchronised
-	 * @return Synchronised class {@linkplain Transactions.TransactionManager}
+	 * Initializes the class {@link Transactions.TransactionManager} if not already
+	 * Initialized, keeping the usage of the class synchronized
+	 * @return Synchronized class {@linkplain Transactions.TransactionManager}
 	 */
 	public synchronized static TransactionManager getInstance() {
 		if (tm == null) {

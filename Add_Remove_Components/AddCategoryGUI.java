@@ -14,17 +14,21 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import Transactions.TransactionManager;
 import mainGUI.GUI;
+import mainGUI.MainGUI;
 
 public class AddCategoryGUI extends GUI{
 	
 	private JFrame frame;
 	private int bankID;
 	private int accountID;
+	private boolean done;
 	
 	public AddCategoryGUI() {
+		done = false;
 		initialise();
 	}
 	
@@ -90,15 +94,16 @@ public class AddCategoryGUI extends GUI{
 				}
 				else {
 					TransactionManager.addCategory(text);
-					System.out.println("Added category");
 					TransactionManager.analyseData();
-					GUI.refreshMain = true;
 					frame.dispose();
 				}
-				
 			}
 			
 		});
 		return panel;
+	}
+
+	public boolean isDone() {
+		return done;
 	}
 }
