@@ -3,9 +3,7 @@ package Import_Export;
  * @author      Matthew Janssen
  */
 
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 
@@ -140,7 +138,6 @@ public class ImportTransactionsGUI extends GUI{
 	
 	private void finaliseGUI() {
 		setCategories();
-		new UserDataExport();
 		frame.dispose();
 	}
 }

@@ -19,14 +19,14 @@ public class TransactionAnalytics extends TransactionManager{
 		analyseData();
 	}
 
-	public void setupAnalytics() {		
-		/** Initialise categoryTotal*/
+	public static void setupAnalytics() {		
+		/** Initialize categoryTotal*/
 		categoryTotal = new ArrayList<Double>();
 		for(int i = 0; i < categories.size(); i++) {
 			categoryTotal.add((double) 0);
 		}
 		
-		/** Initialise categoryWeeklyTotal*/
+		/** Initialize categoryWeeklyTotal*/
 		categoryWeeklyTotal = new ArrayList<ArrayList<Double>>();
 		Calendar cal = Calendar.getInstance();
 		cal.setFirstDayOfWeek(Calendar.MONDAY);
@@ -38,7 +38,7 @@ public class TransactionAnalytics extends TransactionManager{
 			}
 		}
 		
-		/** Initialise bankTotal and accountTotal*/
+		/** Initialize bankTotal and accountTotal*/
 		bankTotal = new ArrayList<Double>();
 		accountTotal = new ArrayList<ArrayList<Double>>();
 		for(int i = 0; i < banks.size(); i++) {
@@ -60,9 +60,9 @@ public class TransactionAnalytics extends TransactionManager{
 			int bank = t.getBankID();
 			int category = t.getCategory();
 			Calendar cal = t.getCalendar();
-			boolean internal = t.isInternal();
-			boolean newImport = t.isNewImport();
-			double transID = t.getTransactionNumber();
+//			boolean internal = t.isInternal();
+//			boolean newImport = t.isNewImport();
+//			double transID = t.getTransactionNumber();
 			double amount = t.getValueTransacted();
 			
 			/** category totals update  */

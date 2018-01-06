@@ -27,7 +27,6 @@ public class FirstRunGUI extends GUI {
 	public FirstRunGUI() {
 		super();
 		initialize();
-		TransactionManager.addCategory("Food");
 		TransactionManager.analyseData();
 	}
 

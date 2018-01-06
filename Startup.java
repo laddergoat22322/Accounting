@@ -22,6 +22,7 @@ public class Startup {
 			}
 			else {
 				TransactionManager.getInstance();
+				TransactionManager.addCategory("Uncategorized");
 				new FirstRunGUI();
 			}
 		}

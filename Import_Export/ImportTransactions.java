@@ -50,7 +50,10 @@ public class ImportTransactions {
                 	if ( newImport[0] != null && !newImport[0].isEmpty()) {
 	                    Calendar cal = checkDate(newImport[0]);
 	                    double amount = Double.parseDouble(newImport[1].replace("\"", ""));
-	                    tm.addTransaction(amount, newImport[2], 0, cal, bankID, accountID, true, false);
+	                    if (!isDuplicateTransaction(amount, newImport[2], cal, bankID, accountID)){
+	                    	tm.addTransaction(amount, newImport[2], 0, cal, bankID, accountID, true, false);
+	                    }
+	                    
                 	}
                 }
             }
@@ -70,6 +73,11 @@ public class ImportTransactions {
         }
 	}
 	
+		private boolean isDuplicateTransaction(double amount, String description, Calendar cal, int bankID, int accountID) {
+		
+		return TransactionManager.checkDuplicate(amount, description, cal, bankID, accountID);
+	}
+
 		private Calendar checkDate(String dateString) {
 			String[] dateCheck = dateString.split("/");
 			
@@ -83,32 +91,4 @@ public class ImportTransactions {
 			cal.set(year, month, day);
 			return cal;
 		}
-
-/*		private void InitialiseDates() throws ParseException{
-		Calendar cal = Calendar.getInstance();
-		cal.setFirstDayOfWeek(Calendar.MONDAY);
-	    String start = "25/12/2016";
-	    String end = "31/12/2017";
-	    SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MM/yyyy");
-	    Calendar scal=Calendar.getInstance();
-	    scal.setTime(dateFormat.parse(start));
-	    Calendar ecal=Calendar.getInstance();
-	    ecal.setTime(dateFormat.parse(end));
-
-	    ArrayList<Date> mondayDates = new ArrayList<>();
-	    while(!scal.equals(ecal)){
-	        scal.add(Calendar.DATE, 1);
-	        if(scal.get(Calendar.DAY_OF_WEEK)==Calendar.MONDAY){
-	            mondayDates.add(scal.getTime());
-	        }
-	    }
-
-	    int TOTALROWS = mondayDates.size();
-	    String[][] allData = new String[100][100];
-	    for(int i = 0; i < TOTALROWS; i++) {
-	   	 
-		allData[i][0] = new SimpleDateFormat("dd/MM/yyyy").format(mondayDates.get(i));
-	    }
-	}
-	*/
 }

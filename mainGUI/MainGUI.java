@@ -8,6 +8,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -16,73 +17,25 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 
 import Add_Remove_Components.AddAccountJOptionPane;
-import Add_Remove_Components.AddCategoryGUI;
 import Add_Remove_Components.AddCategoryJOPtionPane;
-import Add_Remove_Components.AddNewAccountGUI;
 import Import_Export.ImportSelectGUI;
+import Import_Export.UserDataExport;
 import Transactions.TransactionManager;
 
 @SuppressWarnings("serial")
 public class MainGUI extends GUI {
-	private JFrame frame;
-	private JPanel categoryTotalsPanel;
 	private JPanel bankTotalsPanel;
+	private JPanel categoryTotalsPanel;
+	private JFrame frame;
+	private JPanel weeklyTotalsPanel;
 
 
 	public MainGUI() {
 		initialize();
 	}
 	
-	private void updateCategoryTotalsPanel() {
-		frame.getContentPane().invalidate();
-		refreshCategoryTotalsPanel();
-		frame.revalidate();
-		}
-	
-	private void updateBankTotalsPanel() {
-		frame.getContentPane().invalidate();
-		refreshBankTotalsPanel();
-		frame.revalidate();
-		}
-
-	private void refreshBankTotalsPanel() {
-		bankTotalsPanel.removeAll();
-		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 2);
-		
-		JLabel headerLabel = createLabel("Bank Totals", headerFont);
-		bankTotalsPanel.add(headerLabel, c);
-		for(int i = 0; i < TransactionManager.getNumberOfBanks(); i++) {
-			c.gridx = 0;
-			c.gridy++;
-			c.gridwidth = 1;
-			c.fill = GridBagConstraints.NONE;
-			c.anchor = GridBagConstraints.WEST;
-			JLabel bankLabel = createLabel(TransactionManager.getBankName(i), mediumFont);
-			bankTotalsPanel.add(bankLabel, c);
-			
-			
-			String[] accounts = TransactionManager.getAccounts(i);
-			for(int j = 0; j < accounts.length; j++) {
-				//Account
-				JLabel accountLabel = createLabel(accounts[j], smallFont);
-				c.gridx = 0;
-				c.gridy++;
-				c.gridwidth = 1;
-				c.anchor = GridBagConstraints.WEST;
-				bankTotalsPanel.add(accountLabel, c);
-				
-				//Total
-				JLabel amountLabel = createLabel("$" + TransactionManager.getAccountTotal(i, j), smallFont);
-				c.gridx = 1;
-				bankTotalsPanel.add(amountLabel, c);
-			}
-		}
-		
-	}
-
 	private JPanel createBankTotalsPanel() {
 		JPanel panel = createBorderedPanel();
 		
@@ -119,31 +72,6 @@ public class MainGUI extends GUI {
 		return panel;
 	}
 	
-	private void refreshCategoryTotalsPanel() {
-		categoryTotalsPanel.removeAll();
-		
-		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 2);
-		
-		JLabel headerLabel = createLabel("Category Totals", headerFont);
-		categoryTotalsPanel.add(headerLabel, c);
-		
-		for(int i = 0; i < TransactionManager.getNumberOfCategories(); i++) {
-			//category
-			c.gridx = 0;
-			c.gridwidth = 1;
-			c.gridy++;
-			c.anchor = GridBagConstraints.WEST;
-			c.fill = GridBagConstraints.NONE;
-			JLabel categoryLabel = createLabel(TransactionManager.getCategory(i), mediumFont);
-			categoryTotalsPanel.add(categoryLabel, c);
-			
-			//total
-			JLabel amountLabel = createLabel("$" + TransactionManager.getCategoryTotal(i), smallFont);
-			c.gridx++;
-			categoryTotalsPanel.add(amountLabel, c);
-		}
-	}
-	
 	private void createCategoryTotalsPanel() {
 		categoryTotalsPanel = createBorderedPanel();
 		
@@ -173,20 +101,24 @@ public class MainGUI extends GUI {
 	private void createMenuBar() {
 		
 		JMenu fileMenu, addMenu;
-		JMenuItem newImport, settings, addAccount, addCategory;
+		JMenuItem newImport, save, addAccount, addCategory;
 		
 		/** Create MenuBar*/
 		JMenuBar mb=new JMenuBar();  
 		fileMenu = createMenu("File", new Dimension(80, 30));
-		  
+		
 		newImport = createMenuItem("Import");
 		newImport.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			new ImportSelectGUI();
 		}});
 		
-		settings = createMenuItem("Settings");
-		fileMenu.add(newImport); fileMenu.add(settings);
+		save = createMenuItem("Save");
+		save.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			new UserDataExport();
+		}});
+		fileMenu.add(newImport); fileMenu.add(save);
 		
 		addMenu = createMenu("Add/Remove", new Dimension(120, 30));
 		addAccount = createMenuItem("Add Account");
@@ -194,7 +126,6 @@ public class MainGUI extends GUI {
 		public void actionPerformed(ActionEvent e) {
 			new AddAccountJOptionPane();
 			updateBankTotalsPanel();
-
 		}});
 		
 		addMenu.add(addAccount);
@@ -222,7 +153,7 @@ public class MainGUI extends GUI {
 		panel.add(headerLabel, c);
 		return panel;
 	}
-
+	
 	private JPanel createWeeklyTotalsPanel() {
 		JPanel panel = createBorderedPanel();
 		
@@ -280,7 +211,7 @@ public class MainGUI extends GUI {
 		c.gridx++;
 		frame.getContentPane().add(savingsTotalPanel, c);
 		
-		JPanel weeklyTotalsPanel = createWeeklyTotalsPanel();
+		weeklyTotalsPanel = createWeeklyTotalsPanel();
 		c.gridx = 0;
 		c.gridy++;
 		c.weighty = 400;
@@ -292,4 +223,102 @@ public class MainGUI extends GUI {
 		
 		frame.setVisible(true);
 	}
+	
+	private void refreshBankTotalsPanel() {
+		bankTotalsPanel.removeAll();
+		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 2);
+		
+		JLabel headerLabel = createLabel("Bank Totals", headerFont);
+		bankTotalsPanel.add(headerLabel, c);
+		int numBanks = TransactionManager.getNumberOfBanks();
+		for(int i = 0; i < numBanks; i++) {
+			c.gridx = 0;
+			c.gridy++;
+			c.gridwidth = 1;
+			c.weighty = 15;
+			c.fill = GridBagConstraints.NONE;
+			c.anchor = GridBagConstraints.WEST;
+			JLabel bankLabel = createLabel(TransactionManager.getBankName(i), mediumFont);
+			bankTotalsPanel.add(bankLabel, c);
+			
+			
+			String[] accounts = TransactionManager.getAccounts(i);
+			for(int j = 0; j < accounts.length; j++) {
+				//Account
+				JLabel accountLabel = createLabel(accounts[j], smallFont);
+				c.gridx = 0;
+				c.weighty = 1;
+				c.gridy++;
+				c.gridwidth = 1;
+				c.anchor = GridBagConstraints.WEST;
+				bankTotalsPanel.add(accountLabel, c);
+				
+				//Total
+				JLabel amountLabel = createLabel("$" + TransactionManager.getAccountTotal(i, j), smallFont);
+				c.gridx = 1;
+				bankTotalsPanel.add(amountLabel, c);
+			}
+		}
+		
+	}
+
+	private void refreshCategoryTotalsPanel() {
+		categoryTotalsPanel.removeAll();
+		
+		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 2);
+		
+		JLabel headerLabel = createLabel("Category Totals", headerFont);
+		categoryTotalsPanel.add(headerLabel, c);
+		
+		for(int i = 0; i < TransactionManager.getNumberOfCategories(); i++) {
+			//category
+			c.gridx = 0;
+			c.gridwidth = 1;
+			c.gridy++;
+			c.anchor = GridBagConstraints.WEST;
+			c.fill = GridBagConstraints.NONE;
+			JLabel categoryLabel = createLabel(TransactionManager.getCategory(i), mediumFont);
+			categoryTotalsPanel.add(categoryLabel, c);
+			
+			//total
+			JLabel amountLabel = createLabel("$" + TransactionManager.getCategoryTotal(i), smallFont);
+			c.gridx++;
+			categoryTotalsPanel.add(amountLabel, c);
+		}
+	}
+
+	private void refreshWeeklyTotalsPanel() {
+		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 1);
+		
+		JLabel headerLabel = createLabel("Weekly Totals", headerFont);
+		weeklyTotalsPanel.add(headerLabel, c);
+		
+		//Initialize JTable
+		String[][] data = TransactionManager.getWeeklyTotals();
+		String[] header = TransactionManager.getWeeklyTotalsHeader();
+		JTable table = new JTable(data,header){
+			  public boolean isCellEditable(int row,int column){
+				    return false;
+			  }
+		};
+		
+		JScrollPane scrollPane=new JScrollPane(table);
+		scrollPane.setPreferredSize(new Dimension(500, 1000));
+		c.gridy = 2;
+		c.weighty = 15;
+		c.fill = GridBagConstraints.BOTH;
+		weeklyTotalsPanel.add(scrollPane, c);
+	}
+
+	private void updateBankTotalsPanel() {
+		frame.getContentPane().invalidate();
+		refreshBankTotalsPanel();
+		frame.revalidate();
+		}
+	
+	private void updateCategoryTotalsPanel() {
+		frame.getContentPane().invalidate();
+		refreshCategoryTotalsPanel();
+		frame.revalidate();
+		}
 }

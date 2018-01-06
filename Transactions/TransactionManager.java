@@ -104,12 +104,11 @@ public class TransactionManager {
 		accounts.add(new ArrayList<String>());
 		ta = new TransactionAnalytics();
 		
-		addCategory("Uncategorized");
-		addCategory("Food");
-		addCategory("Car");
-		addCategory("Home");
-		addCategory("Miscellaneous");
-		addCategory("Going Away");
+//		addCategory("Food");
+//		addCategory("Car");
+//		addCategory("Home");
+//		addCategory("Miscellaneous");
+//		addCategory("Going Away");
 		
 		addBank("ANZ");
 //		addBank("Commonwealth");
@@ -308,27 +307,42 @@ public class TransactionManager {
 
 
 	public static void analyseData() {
-		ta.setupAnalytics();
+		TransactionAnalytics.setupAnalytics();
 		
 	}
 
 
 	public static String getAccountTotal(int bank, int account) {
-		return ta.getAccountTotal(bank, account);
+		return TransactionAnalytics.getAccountTotal(bank, account);
 	}
 
 
 	public static String getCategoryTotal(int category) {
-		return ta.getCategoryTotal(category);
+		return TransactionAnalytics.getCategoryTotal(category);
 	}
 
 
 	public static String[][] getWeeklyTotals() {
-		return ta.getWeeklyTotals();
+		return TransactionAnalytics.getWeeklyTotals();
 	}
 
 
 	public static String[] getWeeklyTotalsHeader() {
-		return ta.getWeeklyTotalsHeader();
+		return TransactionAnalytics.getWeeklyTotalsHeader();
+	}
+
+
+	public static boolean checkDuplicate(double amount, String description, Calendar cal, int bankID, int accountID) {
+		for(int i = 0; i < transactions.size(); i++) {
+			Calendar localDate = transactions.get(i).getCalendar();
+			if(localDate.DAY_OF_YEAR == cal.DAY_OF_YEAR) {
+				double localAmount = transactions.get(i).getValueTransacted();
+				String localDescription = transactions.get(i).getDescription();
+				if (localAmount == amount && localDescription.equals(description)) {
+					return true;
+				}
+			}
+		}
+		return false;		
 	}
 }
