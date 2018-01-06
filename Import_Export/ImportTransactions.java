@@ -26,17 +26,8 @@ public class ImportTransactions {
 		tm = TransactionManager.getInstance();
 		importFile();
 	}
-	
-	public void importFile() {
-		
-		switch (this.bankID) {
-		case 0:
-			importANZ();
-		}
-		
-	}
 
-	private void importANZ() {
+	private void importFile() {
 		BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
@@ -48,12 +39,17 @@ public class ImportTransactions {
                 String[] newImport = line.split(cvsSplitBy);
                 if (newImport.length > 0) {
                 	if ( newImport[0] != null && !newImport[0].isEmpty()) {
-	                    Calendar cal = checkDate(newImport[0]);
-	                    double amount = Double.parseDouble(newImport[1].replace("\"", ""));
-	                    if (!isDuplicateTransaction(amount, newImport[2], cal, bankID, accountID)){
-	                    	tm.addTransaction(amount, newImport[2], 0, cal, bankID, accountID, true, false);
-	                    }
-	                    
+                		switch (this.bankID) {
+                		case 0:
+                			checkCommonwealthTransaction(newImport);
+                		
+                		case 1:
+                			checkStGeorgeTransaction(newImport);
+                			
+                		case 2:
+                			checkANZTransaction(newImport);
+                		}
+                		
                 	}
                 }
             }
@@ -72,9 +68,41 @@ public class ImportTransactions {
             }
         }
 	}
-	
-		private boolean isDuplicateTransaction(double amount, String description, Calendar cal, int bankID, int accountID) {
+
+	private void checkANZTransaction(String[] newImport) {
+		Calendar cal = checkDate(newImport[0]);
+        double amount = Double.parseDouble(newImport[1].replace("\"", ""));
+        if (!isDuplicateTransaction(amount, newImport[2], cal, bankID, accountID)){
+        	tm.addTransaction(amount, newImport[2], 0, cal, bankID, accountID, true, false);
+        }
+	}
+
+	private void checkStGeorgeTransaction(String[] newImport) {
+		if(!newImport[0].equals("Date")) {
+            Calendar cal = checkDate(newImport[0]);
+            double amount = Double.parseDouble(newImport[2].replace("\"", ""));
+            if (amount == 0) {
+            	amount = Double.parseDouble(newImport[3].replace("\"", ""));
+            }
+            else {
+            	amount = amount*-1;
+            }
+            if (!isDuplicateTransaction(amount, newImport[1], cal, bankID, accountID)){
+            	tm.addTransaction(amount, newImport[1], 0, cal, bankID, accountID, true, false);
+            }
+		}	
 		
+	}
+
+	private void checkCommonwealthTransaction(String[] newImport) {
+		Calendar cal = checkDate(newImport[0]);
+        double amount = Double.parseDouble(newImport[1].replace("\"", ""));
+        if (!isDuplicateTransaction(amount, newImport[2], cal, bankID, accountID)){
+        	tm.addTransaction(amount, newImport[2], 0, cal, bankID, accountID, true, false);
+        }
+	}
+	
+	private boolean isDuplicateTransaction(double amount, String description, Calendar cal, int bankID, int accountID) {
 		return TransactionManager.checkDuplicate(amount, description, cal, bankID, accountID);
 	}
 

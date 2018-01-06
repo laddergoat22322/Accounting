@@ -110,15 +110,13 @@ public class TransactionManager {
 //		addCategory("Miscellaneous");
 //		addCategory("Going Away");
 		
+		addBank("Commonwealth");
+		addBank("St George");
 		addBank("ANZ");
-//		addBank("Commonwealth");
 		
-//		addAccount(0, "Spendings");
-//		addAccount(0, "Low Interest");
-//		addAccount(0, "High Interest");
-//		addAccount(0, "Credit Card");
-//		addAccount(1, "Spendings");
-//		addAccount(1, "Low Interest");
+		addAccount(0, "Comm Spendings");
+		addAccount(1, "st george Spendings");
+		addAccount(2, "ANZ Spendings");
 	}
 	
 	

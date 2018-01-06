@@ -122,7 +122,9 @@ public class ImportSelectGUI extends GUI {
 		c.ipadx = 0;
 		c.anchor = GridBagConstraints.WEST;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		tf.setText("C:/Users/matth/Downloads/CSVData.csv");
+		//tf.setText("C:/Users/matth/Downloads/CSVData.csv");
+		//tf.setText("C:/Users/matth/Desktop/trans040118.csv");
+		tf.setText("C:/Users/matth/Downloads/ANZ.csv");
 		thePanel.add(tf, c);
 		
 		JButton findFileButton = new JButton("Select...");
