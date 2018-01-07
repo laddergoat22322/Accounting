@@ -95,13 +95,10 @@ public class UserDataImport {
 				//Internal Parse
 				boolean internal = Boolean.parseBoolean(transactionDataList.item(6).getTextContent());
 				
-				//newImport Parse
-				boolean newImport = Boolean.parseBoolean(transactionDataList.item(7).getTextContent());
-				
 				//Description
 				String description = transactionDataList.item(8).getTextContent();
 				
-				tm.addTransaction(amount, description, categoryID, cal, bankID, accountID, newImport, internal);
+				tm.addTransaction(amount, description, categoryID, cal, bankID, accountID, internal);
 				
 			}
 			

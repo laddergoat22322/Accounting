@@ -34,68 +34,23 @@ public class MainGUI extends GUI {
 
 	public MainGUI() {
 		initialize();
+		refreshAll();
 	}
 	
-	private JPanel createBankTotalsPanel() {
-		JPanel panel = createBorderedPanel();
-		
-		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 2);
-		
-		JLabel headerLabel = createLabel("Bank Totals", headerFont);
-		panel.add(headerLabel, c);
-		for(int i = 0; i < TransactionManager.getNumberOfBanks(); i++) {
-			c.gridx = 0;
-			c.gridy++;
-			c.gridwidth = 1;
-			c.fill = GridBagConstraints.NONE;
-			c.anchor = GridBagConstraints.WEST;
-			JLabel bankLabel = createLabel(TransactionManager.getBankName(i), mediumFont);
-			panel.add(bankLabel, c);
-			
-			
-			String[] accounts = TransactionManager.getAccounts(i);
-			for(int j = 0; j < accounts.length; j++) {
-				//Account
-				JLabel accountLabel = createLabel(accounts[j], smallFont);
-				c.gridx = 0;
-				c.gridy++;
-				c.gridwidth = 1;
-				c.anchor = GridBagConstraints.WEST;
-				panel.add(accountLabel, c);
-				
-				//Total
-				JLabel amountLabel = createLabel("$" + TransactionManager.getAccountTotal(i, j), smallFont);
-				c.gridx = 1;
-				panel.add(amountLabel, c);
-			}
-		}
-		return panel;
+	private void refreshAll() {
+		refreshBankTotalsPanel();
+		refreshCategoryTotalsPanel();
+		refreshWeeklyTotalsPanel();		
+	}
+
+	private void createBankTotalsPanel() {
+		bankTotalsPanel = createBorderedPanel();
+		refreshBankTotalsPanel();
 	}
 	
 	private void createCategoryTotalsPanel() {
 		categoryTotalsPanel = createBorderedPanel();
-		
-		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 2);
-		
-		JLabel headerLabel = createLabel("Category Totals", headerFont);
-		categoryTotalsPanel.add(headerLabel, c);
-		
-		for(int i = 0; i < TransactionManager.getNumberOfCategories(); i++) {
-			
-			//category
-			c.gridx = 0;
-			c.gridwidth = 1;
-			c.gridy++;
-			c.anchor = GridBagConstraints.WEST;
-			c.fill = GridBagConstraints.NONE;
-			JLabel categoryLabel = createLabel(TransactionManager.getCategory(i), mediumFont);
-			categoryTotalsPanel.add(categoryLabel, c);
-			
-			//total
-			JLabel amountLabel = createLabel("$" + TransactionManager.getCategoryTotal(i), smallFont);
-			c.gridx++;
-			categoryTotalsPanel.add(amountLabel, c);
-		}
+		refreshCategoryTotalsPanel();
 	}
 
 	private void createMenuBar() {
@@ -154,31 +109,9 @@ public class MainGUI extends GUI {
 		return panel;
 	}
 	
-	private JPanel createWeeklyTotalsPanel() {
-		JPanel panel = createBorderedPanel();
-		
-		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 1);
-		
-		JLabel headerLabel = createLabel("Weekly Totals", headerFont);
-		panel.add(headerLabel, c);
-		
-		//Initialize JTable
-		String[][] data = TransactionManager.getWeeklyTotals();
-		String[] header = TransactionManager.getWeeklyTotalsHeader();
-		JTable table = new JTable(data,header){
-			  public boolean isCellEditable(int row,int column){
-				    return false;
-			  }
-		};
-		
-		JScrollPane scrollPane=new JScrollPane(table);
-		scrollPane.setPreferredSize(new Dimension(500, 1000));
-		c.gridy = 2;
-		c.weighty = 15;
-		c.fill = GridBagConstraints.BOTH;
-		panel.add(scrollPane, c);
-		
-		return panel;
+	private void createWeeklyTotalsPanel() {
+		weeklyTotalsPanel = createBorderedPanel();
+		refreshWeeklyTotalsPanel();
 	}
 	
 	private void initialize() {
@@ -197,7 +130,7 @@ public class MainGUI extends GUI {
 		headerPanel.add(headerLabel);
 		frame.getContentPane().add(headerPanel, c);
 		
-		bankTotalsPanel = createBankTotalsPanel();
+		createBankTotalsPanel();
 		c.gridy++;
 		c.weighty = 10;
 		c.gridwidth = 1;
@@ -211,7 +144,7 @@ public class MainGUI extends GUI {
 		c.gridx++;
 		frame.getContentPane().add(savingsTotalPanel, c);
 		
-		weeklyTotalsPanel = createWeeklyTotalsPanel();
+		createWeeklyTotalsPanel();
 		c.gridx = 0;
 		c.gridy++;
 		c.weighty = 400;
@@ -288,6 +221,7 @@ public class MainGUI extends GUI {
 	}
 
 	private void refreshWeeklyTotalsPanel() {
+		weeklyTotalsPanel.removeAll();
 		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 1);
 		
 		JLabel headerLabel = createLabel("Weekly Totals", headerFont);

@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import Transactions.TransactionManager;
+import mainGUI.ModifiableJOptionPane;
 
 public class AddCategoryJOPtionPane extends ModifiableJOptionPane{
 
@@ -13,7 +14,7 @@ public class AddCategoryJOPtionPane extends ModifiableJOptionPane{
 	}
 	
 
-	protected void displayGUI() {
+	public void displayGUI() {
     	while (!done) {
             int input = JOptionPane.showConfirmDialog(null,
                     getPanel(),
@@ -23,7 +24,7 @@ public class AddCategoryJOPtionPane extends ModifiableJOptionPane{
     	}        
     }
 
-    protected void checkInput(int input) {
+	public void checkInput(int input) {
 		String text = tf.getText();
 		if(input == JOptionPane.CANCEL_OPTION || input == JOptionPane.CLOSED_OPTION) {
 			done = true;
@@ -43,7 +44,7 @@ public class AddCategoryJOPtionPane extends ModifiableJOptionPane{
 	}
 
 
-	protected JPanel getPanel() {
+	public JPanel getPanel() {
     	JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 		

@@ -57,7 +57,7 @@ public class UserDataExport {
 	         rootElement.appendChild(userData);
 	         
 	         // UserName element
-	         String name = tm.getUserName();
+	         String name = TransactionManager.getUserName();
 	         if (!name.isEmpty() && name != null) {
 		         userData.appendChild(createElement("username", name));
 	         }
@@ -65,21 +65,21 @@ public class UserDataExport {
 	         //User categories
 	         Element categories = doc.createElement("categories");
 	         userData.appendChild(categories);
-	         int numCategories = tm.getNumberOfCategories();
+	         int numCategories = TransactionManager.getNumberOfCategories();
 	         for(int i = 0; i < numCategories; i++) {
-	        	 categories.appendChild(createElement("category", tm.getCategory(i)));
+	        	 categories.appendChild(createElement("category", TransactionManager.getCategory(i)));
 	         }
 	         
 	         //User Banks
 	         Element banks = doc.createElement("banks");
 	         userData.appendChild(banks);
-	         int numBanks = tm.getNumberOfBanks();
+	         int numBanks = TransactionManager.getNumberOfBanks();
 	         for(int i = 0; i < numBanks; i++) {
 		         Element bank = doc.createElement("bank");
-		         bank.setAttribute("name", tm.getBankName(i));
+		         bank.setAttribute("name", TransactionManager.getBankName(i));
 		         banks.appendChild(bank);
 		         
-	        	 String[] accounts = tm.getAccounts(i);
+	        	 String[] accounts = TransactionManager.getAccounts(i);
 	        	 int numAccounts = accounts.length;
 	        	 for(int j = 0; j < numAccounts; j++) {
 	        		 bank.appendChild(createElement("account", accounts[j]));
@@ -91,7 +91,7 @@ public class UserDataExport {
 	         rootElement.appendChild(transactions);
 	         
 	         for(int i = 0; i < numTrans; i++) {
-	        	Transaction t = tm.getTransaction(i);
+	        	Transaction t = TransactionManager.getTransaction(i);
 	        	int day = t.getDay();
 				int month = t.getMonth();
 				int year = t.getYear();
@@ -102,9 +102,8 @@ public class UserDataExport {
 				double amount = t.getValueTransacted();
 				double transactionID = t.getTransactionNumber();
 				boolean internal = t.isInternal();
-				boolean newImport = t.isNewImport();
 				Element transaction = createTransactionElement(day, month, year, bank, account, category,
-						transactionID, description, amount, internal, newImport);
+						transactionID, description, amount, internal);
 				transactions.appendChild(transaction);
 	         }
 
@@ -135,7 +134,7 @@ public class UserDataExport {
 	}
 	
 	private Element createTransactionElement(int day, int month, int year, int bank, int account, int category,
-			double transaction, String description, double amount, boolean internal, boolean newImport) {
+			double transaction, String description, double amount, boolean internal) {
 		
 				// Single Transaction element
 		         Element tran = doc.createElement("transaction");
@@ -154,7 +153,6 @@ public class UserDataExport {
 		         tran.appendChild(createElement("categoryID" , Integer.toString(category)));
 		         tran.appendChild(createElement("amount"     , Double.toString(amount)));
 		         tran.appendChild(createElement("internal"   , Boolean.toString(internal)));
-		         tran.appendChild(createElement("newImport"  , Boolean.toString(newImport)));
 		         tran.appendChild(createElement("description", description));
 		         return tran;
 	}

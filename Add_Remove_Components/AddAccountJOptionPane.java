@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import Transactions.TransactionManager;
+import mainGUI.ModifiableJOptionPane;
 
 public class AddAccountJOptionPane extends ModifiableJOptionPane {
 
@@ -26,7 +27,7 @@ public class AddAccountJOptionPane extends ModifiableJOptionPane {
 	}
 	
 	@Override
-	protected void displayGUI() {
+	public void displayGUI() {
     	while (!done) {
             int input = JOptionPane.showConfirmDialog(null,
                     getPanel(),
@@ -36,7 +37,7 @@ public class AddAccountJOptionPane extends ModifiableJOptionPane {
     	}
 	}
 
-	protected void checkInput(int input) {
+	public void checkInput(int input) {
 		String text = tf.getText();
 		if(input == JOptionPane.CANCEL_OPTION || input == JOptionPane.CLOSED_OPTION) {
 			done = true;
@@ -57,7 +58,7 @@ public class AddAccountJOptionPane extends ModifiableJOptionPane {
 		
 	}
 
-	protected JPanel getPanel() {
+	public JPanel getPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 		

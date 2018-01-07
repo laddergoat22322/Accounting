@@ -1,9 +1,7 @@
-package Add_Remove_Components;
+package mainGUI;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import mainGUI.GUI;
 
 public abstract class ModifiableJOptionPane extends GUI {
 	protected boolean done;
@@ -15,7 +13,7 @@ public abstract class ModifiableJOptionPane extends GUI {
 	}
 	
 	
-	abstract void displayGUI();
-	abstract void checkInput(int input);
-	abstract JPanel getPanel();
+	public abstract void displayGUI();
+	public abstract void checkInput(int input);
+	public abstract JPanel getPanel();
 }

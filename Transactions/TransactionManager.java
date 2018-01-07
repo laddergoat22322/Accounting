@@ -25,6 +25,7 @@ public class TransactionManager {
 	protected static TransactionAnalytics ta;
 	protected static TransactionManager tm;
 	protected static ArrayList<Transaction> transactions;
+	protected static ArrayList<Transaction> tempTransactions;
 	private static String uName;
 	
 	
@@ -98,25 +99,12 @@ public class TransactionManager {
 	private static void setup() {
 		tm = new TransactionManager();
 		transactions = new ArrayList<Transaction>();
+		tempTransactions = new ArrayList<Transaction>();
 		categories = new ArrayList<String>();
 		banks = new ArrayList<String>();
 		accounts = new ArrayList<ArrayList<String>>();
 		accounts.add(new ArrayList<String>());
 		ta = new TransactionAnalytics();
-		
-//		addCategory("Food");
-//		addCategory("Car");
-//		addCategory("Home");
-//		addCategory("Miscellaneous");
-//		addCategory("Going Away");
-		
-		addBank("Commonwealth");
-		addBank("St George");
-		addBank("ANZ");
-		
-		addAccount(0, "Comm Spendings");
-		addAccount(1, "st george Spendings");
-		addAccount(2, "ANZ Spendings");
 	}
 	
 	
@@ -135,15 +123,15 @@ public class TransactionManager {
 	 * @return True if the bank, category and account index exist within {@link #banks},
 	 * {@link #categories}, {@link #accounts} respectively
 	 */
-	public boolean addTransaction(double amount, String description, int category,
-			Calendar date, int bank, int account, boolean newImport, boolean internal) {
+	public static boolean addTransaction(double amount, String description, int category,
+			Calendar date, int bank, int account, boolean internal) {
 		
 		if(category < 0 || category >= categories.size()) return false;
 		if(bank < 0 || bank >= banks.size()) return false;
 		
 		double transactionNumber = transactions.size();
 		Transaction newTrans = new Transaction(transactionNumber, amount, description, 
-				category, date, bank, account, newImport, internal);
+				category, date, bank, account, internal);
 		transactions.add(newTrans);
 		return true;
 	}
@@ -218,28 +206,15 @@ public class TransactionManager {
 		return exportedCategories;
 	}
 	
-	public static Double[] getNewTransactionIndexes() {
-		int totalTransactions = transactions.size();
-		ArrayList<Double> result = new ArrayList<Double>();
-		for(int i = 0; i < totalTransactions; i++) {
-			if (transactions.get(i).isNewImport()) {
-				result.add(transactions.get(i).getTransactionNumber());
-			}
-		}
-		return result.toArray(new Double[result.size()]);
-	}
-	
 	public static String[][] getNewTransactions() {
-		int totalTransactions = transactions.size();
+		int totalTransactions = tempTransactions.size();
 		String[][] exportedTransactions = new String[totalTransactions][5];
 		for(int i = 0; i < totalTransactions; i++) {
-			if (transactions.get(i).isNewImport()) {
-				Date tempDate = transactions.get(i).getDate();
-				exportedTransactions[i][0] = new SimpleDateFormat("dd/MM/yyyy").format(tempDate);
-				exportedTransactions[i][1] = categories.get(transactions.get(i).getCategory());
-				exportedTransactions[i][2] = transactions.get(i).getDescription();
-				exportedTransactions[i][3] = String.valueOf(transactions.get(i).getValueTransacted());
-			}
+			Date tempDate = tempTransactions.get(i).getDate();
+			exportedTransactions[i][0] = new SimpleDateFormat("dd/MM/yyyy").format(tempDate);
+			exportedTransactions[i][1] = categories.get(0);
+			exportedTransactions[i][2] = tempTransactions.get(i).getDescription();
+			exportedTransactions[i][3] = String.valueOf(tempTransactions.get(i).getValueTransacted());
 		}
 		return exportedTransactions;
 	}
@@ -256,48 +231,18 @@ public class TransactionManager {
 		return transactions.size();
 	}
 
-	public Transaction getTransaction(int transactionIndex) {
+	public static Transaction getTransaction(int transactionIndex) {
 		return transactions.get(transactionIndex);
+	}
+	
+	public static Transaction getTempTransaction(int transactionIndex) {
+		return tempTransactions.get(transactionIndex);
 	}
 
 	public static String getUserName(){
 		return TransactionManager.uName;
 	}
 
-	public static void setTransaction(TransactionAttribute attr, double accountIndex, Object value) {
-		switch(attr) {
-		case ACCOUNT_ID :
-			transactions.get((int) accountIndex).setCategory((int) value);
-			break;
-			
-		case AMOUNT:
-			break;
-			
-		case BANK_ID:
-			break;
-			
-		case CATEGORY_ID:
-			break;
-			
-		case DATE:
-			break;
-			
-		case DESCRIPTION:
-			break;
-			
-		case INTERNAL:
-			break;
-			
-		case NEWIMPORT:
-			break;
-			
-		case TRANSACTION_ID:
-			break;
-			
-		default:
-			break;
-		}
-	}
 
 	public static void setUserName(String name){
 		TransactionManager.uName = name;
@@ -342,5 +287,32 @@ public class TransactionManager {
 			}
 		}
 		return false;		
+	}
+
+	public boolean addTempTransaction(double amount, String description, int category,
+			Calendar cal, int bank, int account, boolean internal) {
+		
+		if(category < 0 || category >= categories.size()) return false;
+		if(bank < 0 || bank >= banks.size()) return false;
+		
+		double transactionNumber = 0; //TODO
+		Transaction newTrans = new Transaction(transactionNumber, amount, description, 
+				category, cal, bank, account, internal);
+		tempTransactions.add(newTrans);
+		return true;
+	}
+
+
+	public static void addTempTransaction(Transaction t) {
+		Calendar cal = t.getCalendar();
+		int bank = t.getBankID();
+		int account = t.getAccountID();
+		int category = t.getCategory();
+		String description = t.getDescription();
+		double amount = t.getValueTransacted();
+		boolean internal = t.isInternal();
+		
+		addTransaction(amount, description, category, cal, bank, account, internal);
+		
 	}
 }

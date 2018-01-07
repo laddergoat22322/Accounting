@@ -24,7 +24,6 @@ public class Transaction {
 	private Calendar date;
 	private String description;
 	private boolean internal;
-	private boolean newImport;
 	private double transactionNumber;
 	private double valueTransacted;
 	
@@ -43,7 +42,7 @@ public class Transaction {
 	  * @param internal If the transaction is between the personal accounts
 	  */
 	public Transaction(double transactionNumber, double valueTransacted, String description, 
-			int category, Calendar date, int bank, int accountID, boolean newImport, boolean internal) {
+			int category, Calendar date, int bank, int accountID, boolean internal) {
 		this.transactionNumber = transactionNumber;
 		this.valueTransacted = valueTransacted;
 		this.description = description;
@@ -52,7 +51,6 @@ public class Transaction {
 		this.internal = internal;
 		this.bankID = bank;
 		this.accountID = accountID;
-		this.newImport = newImport;
 		
 		this.date.setFirstDayOfWeek(Calendar.MONDAY);
 		
@@ -175,16 +173,6 @@ public class Transaction {
 		return internal;
 	}
 	
-	
-	  /** 
-	    * Get if the {@link Transactions.Transaction} is an unsorted/categorized
-	    * 
-	    * @return <code>if</code> {@link Transactions.Transaction} is uncategorised, returns {@code true}
-	    */
-	public boolean isNewImport() {
-		return newImport;
-	}
-	
 	/** 
 	  * Set the {@link Transactions.Transaction} category index for {@link Transactions.TransactionManager#categories}.
 	  * 
@@ -221,16 +209,6 @@ public class Transaction {
 	    */
 	public void setInternal(boolean internal) {
 		this.internal = internal;
-	}
-	
-	
-	  /** 
-	    * Set if the {@link Transactions.Transaction} is a new import
-	    * 
-	    * @param b Boolean if {@link Transactions.Transaction} is a new import
-	    */
-	public void setNewImport(boolean b) {
-		this.newImport = b;
 	}
 	
 	/** 

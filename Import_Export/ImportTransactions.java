@@ -73,7 +73,7 @@ public class ImportTransactions {
 		Calendar cal = checkDate(newImport[0]);
         double amount = Double.parseDouble(newImport[1].replace("\"", ""));
         if (!isDuplicateTransaction(amount, newImport[2], cal, bankID, accountID)){
-        	tm.addTransaction(amount, newImport[2], 0, cal, bankID, accountID, true, false);
+        	tm.addTempTransaction(amount, newImport[2], 0, cal, bankID, accountID, false);
         }
 	}
 
@@ -88,7 +88,7 @@ public class ImportTransactions {
             	amount = amount*-1;
             }
             if (!isDuplicateTransaction(amount, newImport[1], cal, bankID, accountID)){
-            	tm.addTransaction(amount, newImport[1], 0, cal, bankID, accountID, true, false);
+            	tm.addTempTransaction(amount, newImport[1], 0, cal, bankID, accountID, false);
             }
 		}	
 		
@@ -98,7 +98,7 @@ public class ImportTransactions {
 		Calendar cal = checkDate(newImport[0]);
         double amount = Double.parseDouble(newImport[1].replace("\"", ""));
         if (!isDuplicateTransaction(amount, newImport[2], cal, bankID, accountID)){
-        	tm.addTransaction(amount, newImport[2], 0, cal, bankID, accountID, true, false);
+        	tm.addTempTransaction(amount, newImport[2], 0, cal, bankID, accountID, false);
         }
 	}
 	

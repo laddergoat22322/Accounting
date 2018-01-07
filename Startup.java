@@ -23,6 +23,13 @@ public class Startup {
 			else {
 				TransactionManager.getInstance();
 				TransactionManager.addCategory("Uncategorized");
+				TransactionManager.addBank("Commonwealth");
+				TransactionManager.addBank("St George");
+				TransactionManager.addBank("ANZ");
+				
+				TransactionManager.addAccount(0, "Comm Spendings");
+				TransactionManager.addAccount(1, "st george Spendings");
+				TransactionManager.addAccount(2, "ANZ Spendings");
 				new FirstRunGUI();
 			}
 		}

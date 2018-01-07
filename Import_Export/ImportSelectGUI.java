@@ -174,7 +174,7 @@ public class ImportSelectGUI extends GUI {
 					fileLoc = tf.getText();
 					new ImportTransactions(bankID, accountID, fileLoc);
 					frame.dispose();
-					new ImportTransactionsGUI();
+					new ImportTransactionsJOptionPane();
 				}
 				
 			}
