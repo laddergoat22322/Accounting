@@ -251,7 +251,6 @@ public class TransactionManager {
 
 	public static void analyseData() {
 		TransactionAnalytics.setupAnalytics();
-		
 	}
 
 

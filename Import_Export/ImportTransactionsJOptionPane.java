@@ -50,6 +50,7 @@ public class ImportTransactionsJOptionPane extends ModifiableJOptionPane {
 						JOptionPane.YES_NO_OPTION);
 				if (dialogResult == JOptionPane.YES_OPTION) {
 					setCategories();
+					TransactionManager.analyseData();
 					done = true;
 					return ;
 				}
@@ -59,6 +60,7 @@ public class ImportTransactionsJOptionPane extends ModifiableJOptionPane {
 			}
 		}
 		setCategories();
+		TransactionManager.analyseData();
 		done = true;
 	}
 
@@ -108,6 +110,8 @@ public class ImportTransactionsJOptionPane extends ModifiableJOptionPane {
 		table.getColumnModel().getColumn(1).setPreferredWidth(200);	//Category
 		table.getColumnModel().getColumn(2).setPreferredWidth(650);	//Description
 		table.getColumnModel().getColumn(3).setPreferredWidth(100);	//Amount
+		
+		table.setRowHeight(table.getRowHeight() + 5);
 		
 		JScrollPane scrollPane=new JScrollPane(table);
 		scrollPane.setPreferredSize(new Dimension(1500, 600));
