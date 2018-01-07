@@ -96,7 +96,7 @@ public class UserDataImport {
 				boolean internal = Boolean.parseBoolean(transactionDataList.item(6).getTextContent());
 				
 				//Description
-				String description = transactionDataList.item(8).getTextContent();
+				String description = transactionDataList.item(7).getTextContent();
 				
 				tm.addTransaction(amount, description, categoryID, cal, bankID, accountID, internal);
 				

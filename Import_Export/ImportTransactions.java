@@ -11,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Date;
+import java.util.Arrays;
 import java.util.Calendar;
 import Transactions.TransactionManager;
 
@@ -71,10 +73,13 @@ public class ImportTransactions {
 
 	private void checkANZTransaction(String[] newImport) {
 		Calendar cal = checkDate(newImport[0]);
-        double amount = Double.parseDouble(newImport[1].replace("\"", ""));
-        if (!isDuplicateTransaction(amount, newImport[2], cal, bankID, accountID)){
-        	tm.addTempTransaction(amount, newImport[2], 0, cal, bankID, accountID, false);
-        }
+		if(cal.get(Calendar.YEAR) == 2018) {
+	        double amount = Double.parseDouble(newImport[1].replace("\"", ""));
+	        if (!isDuplicateTransaction(amount, newImport[2], cal, bankID, accountID)){
+	        	tm.addTempTransaction(amount, newImport[2], 0, cal, bankID, accountID, false);
+	        	System.out.println("added to temp");
+	        }
+		}
 	}
 
 	private void checkStGeorgeTransaction(String[] newImport) {
@@ -108,15 +113,23 @@ public class ImportTransactions {
 
 		private Calendar checkDate(String dateString) {
 			String[] dateCheck = dateString.split("/");
-			
+			System.out.println(Arrays.toString(dateCheck));
 			int day = Integer.parseInt(dateCheck[0]);
 			
 			int month = Integer.parseInt(dateCheck[1]);
 			
 			int year = Integer.parseInt(dateCheck[2]);
 			
-			Calendar cal = Calendar.getInstance();
-			cal.set(year, month, day);
-			return cal;
+			Calendar c1 = Calendar.getInstance(); // August  16th, 2012 AD
+			c1.set(Calendar.YEAR, 0);             // August  16th,    0 AD
+			c1.set(Calendar.DAY_OF_YEAR, 1);      // January  1st,    0 AD
+			c1.set(Calendar.MONTH, month-1);
+			c1.set(Calendar.DAY_OF_MONTH, day);
+
+			Calendar c2 = Calendar.getInstance();
+			c2.setTime(c1.getTime());
+			c2.set(Calendar.YEAR, year);          // January  1st, 2001 BC
+			System.out.println(c2.getTime()); 
+			return c2;
 		}
 }

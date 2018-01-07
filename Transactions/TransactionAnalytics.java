@@ -100,11 +100,11 @@ public class TransactionAnalytics extends TransactionManager{
 	}
 
 	public static String getCategoryTotal(int category) {
-		return Double.toString(Math.abs(categoryTotal.get(category)));
+		return Double.toString(Math.abs(round(categoryTotal.get(category), 2)));
 	}
 
 	public static String getAccountTotal(int bank, int account) {
-		return Double.toString(accountTotal.get(bank).get(account));
+		return Double.toString(round(accountTotal.get(bank).get(account), 2));
 	}
 
 	public static String[][] getWeeklyTotals() {
@@ -136,7 +136,7 @@ public class TransactionAnalytics extends TransactionManager{
 	     for(int i = 0; i < numberOfWeeks; i++) {
 	    	 result[i][0] = new SimpleDateFormat("dd/MM/yyyy").format(mondayDates.get(i));
 	    	 for(int j = 0; j < categories.size(); j++) {
-	    		 result[i][j+1] = "$" + Double.toString(categoryWeeklyTotal.get(i).get(j));
+	    		 result[i][j+1] = "$" + Double.toString(round(categoryWeeklyTotal.get(i).get(j), 2));
 	    	 }
 	     }
 		return result;
@@ -151,5 +151,14 @@ public class TransactionAnalytics extends TransactionManager{
 		}
 		result[headerLength-1] = "Total";
 		return result;
+	}
+	
+	public static double round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    long factor = (long) Math.pow(10, places);
+	    value = value * factor;
+	    long tmp = Math.round(value);
+	    return (double) tmp / factor;
 	}
 }

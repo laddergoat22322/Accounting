@@ -20,7 +20,7 @@ import javax.swing.JTable;
 
 import Add_Remove_Components.AddAccountJOptionPane;
 import Add_Remove_Components.AddCategoryJOPtionPane;
-import Import_Export.ImportSelectGUI;
+import Import_Export.ImportSelectJOptionPane;
 import Import_Export.UserDataExport;
 import Transactions.TransactionManager;
 
@@ -34,7 +34,6 @@ public class MainGUI extends GUI {
 
 	public MainGUI() {
 		initialize();
-		refreshAll();
 	}
 	
 	private void refreshAll() {
@@ -65,7 +64,8 @@ public class MainGUI extends GUI {
 		newImport = createMenuItem("Import");
 		newImport.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-			new ImportSelectGUI();
+			new ImportSelectJOptionPane();
+			refreshAll();
 		}});
 		
 		save = createMenuItem("Save");
@@ -80,7 +80,7 @@ public class MainGUI extends GUI {
 		addAccount.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			new AddAccountJOptionPane();
-			updateBankTotalsPanel();
+			refreshAll();
 		}});
 		
 		addMenu.add(addAccount);
@@ -89,7 +89,7 @@ public class MainGUI extends GUI {
 		addCategory.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			new AddCategoryJOPtionPane();
-			updateCategoryTotalsPanel();
+			refreshAll();
 		}});
 		
 		addMenu.add(addCategory);

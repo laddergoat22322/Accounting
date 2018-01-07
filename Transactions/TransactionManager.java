@@ -313,6 +313,5 @@ public class TransactionManager {
 		boolean internal = t.isInternal();
 		
 		addTransaction(amount, description, category, cal, bank, account, internal);
-		
 	}
 }

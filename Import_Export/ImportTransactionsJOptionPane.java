@@ -116,36 +116,6 @@ public class ImportTransactionsJOptionPane extends ModifiableJOptionPane {
 		c.fill = GridBagConstraints.BOTH;
 		thePanel.add(scrollPane, c);
 		
-		JButton doneButton = new JButton("Done");
-		doneButton.setFont(mediumFont);
-		doneButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int dialogResult;
-				int numRows = table.getRowCount();
-				for(int i = 0; i < numRows; i++) {
-					String cell = (String) table.getModel().getValueAt(i, 1);
-					if (cell.equals("Uncategorized")) {
-						dialogResult = JOptionPane.showConfirmDialog(null, 
-								"Not all transactions are categorised.\n Do you still want to continue?",
-								"Warning", 
-								JOptionPane.YES_NO_OPTION);
-						if (dialogResult == JOptionPane.YES_OPTION) {
-							setCategories();
-							return ;
-						}
-						else return ;
-					}
-					setCategories();
-				}
-			}			
-		});
-		c.gridy = 3;
-		c.weighty = 1;
-		c.fill = GridBagConstraints.NONE;
-		thePanel.add(doneButton, c);
-		thePanel.setSize(new Dimension(1000, 100));
 		table.setSize(new Dimension(1000, 100));
 		return thePanel;
     }
