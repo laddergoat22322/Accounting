@@ -8,17 +8,6 @@ import java.util.Date;
 
 public class TransactionManager {
 	
-	public enum TransactionAttribute {
-		ACCOUNT_ID,
-		AMOUNT,
-		BANK_ID,
-		CATEGORY_ID,
-		DATE,
-		DESCRIPTION,
-		INTERNAL,
-		NEWIMPORT,
-		TRANSACTION_ID;
-	}
 	protected static ArrayList<ArrayList<String>> accounts;
 	protected static ArrayList<String> banks;
 	protected static ArrayList<String> categories;
@@ -138,7 +127,7 @@ public class TransactionManager {
 	
 	
 	/**
-	 * Creates and returns a  list of accounts within the bank
+	 * Returns a list of accounts within the bank from the given bankID
 	 * 
 	 * @param bankID {@link #banks} index
 	 * @return Array of accounts within bank
@@ -152,6 +141,12 @@ public class TransactionManager {
 		return result;
 	}
 	
+	
+	/**
+	 * Lists the names of all banks
+	 * 
+	 * @return Array of bank names
+	 */
 	public static String[] getAllBanks() {
 		int numBanks = banks.size();
 		String[] b = new String[numBanks];
@@ -161,6 +156,11 @@ public class TransactionManager {
 		return b;
 	}
 	
+	/**
+	 * Get the name of a given bankID
+	 * @param bankID
+	 * @return bank's name
+	 */
 	public static String getBankName(int bankID) {
 		if (bankID < 0 || bankID > banks.size()) {
 			return null;
@@ -168,10 +168,19 @@ public class TransactionManager {
 		return banks.get(bankID);
 	}
 	
+	
+	/**
+	 * Creates and returns an array of category names
+	 * @return All categories
+	 */
 	public static String[] getCategories() {
 		return categories.toArray(new String[categories.size()]);
 	}
 	
+	/**
+	 * Creates the header for {@link mainGUI.MainGUI} with all catgeories, date and total
+	 * @return Category header array
+	 */
 	public String[] getCategoriesHeader() {
 		int arraySize = categories.size() + 2;
 		String[] exportedCategories = new String[arraySize];
@@ -183,14 +192,24 @@ public class TransactionManager {
 		return exportedCategories;
 	}
 
+	/**
+	 * Get a category name by it's index
+	 * @param index Category index
+	 * @return
+	 */
 	public static String getCategory(int index) {
 		return categories.get(index);
 		
 	}
 
-	public static int getCategoryByIndex(String cell) {
+	/**
+	 * Get a categories index
+	 * @param category Name of category
+	 * @return Category index
+	 */
+	public static int getCategoryByIndex(String category) {
 		for (int i = 0; i < categories.size(); i++) {
-			if (cell.equals(categories.get(i))) {
+			if (category.equals(categories.get(i))) {
 				return i;
 			}
 		}
