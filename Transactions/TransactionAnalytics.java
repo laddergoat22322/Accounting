@@ -8,49 +8,12 @@ import java.util.Date;
 
 public class TransactionAnalytics extends TransactionManager{
 	
+	private static ArrayList<ArrayList<Double>> accountTotal;
+	private static ArrayList<Double> bankTotal;
 	private static ArrayList<Double> categoryTotal;
 	private static ArrayList<ArrayList<Double>> categoryWeeklyTotal;
-	private static ArrayList<Double> bankTotal;
-	private static ArrayList<ArrayList<Double>> accountTotal;
+	private static ArrayList<Double> weeklyTotal;
 	
-	public TransactionAnalytics() 
-	{
-		setupAnalytics();
-		analyseData();
-	}
-
-	public static void setupAnalytics() {		
-		/** Initialize categoryTotal*/
-		categoryTotal = new ArrayList<Double>();
-		for(int i = 0; i < categories.size(); i++) {
-			categoryTotal.add((double) 0);
-		}
-		
-		/** Initialize categoryWeeklyTotal*/
-		categoryWeeklyTotal = new ArrayList<ArrayList<Double>>();
-		Calendar cal = Calendar.getInstance();
-		cal.setFirstDayOfWeek(Calendar.MONDAY);
-		int weeksInYear = cal.getActualMaximum(Calendar.WEEK_OF_YEAR);
-		for(int i = 0; i < weeksInYear+1; i++) {
-			categoryWeeklyTotal.add(new ArrayList<Double>());
-			for(int j = 0; j < categories.size(); j++) {
-				categoryWeeklyTotal.get(i).add((double) 0);
-			}
-		}
-		
-		/** Initialize bankTotal and accountTotal*/
-		bankTotal = new ArrayList<Double>();
-		accountTotal = new ArrayList<ArrayList<Double>>();
-		for(int i = 0; i < banks.size(); i++) {
-			bankTotal.add((double) 0);
-			accountTotal.add(new ArrayList<Double>());
-			for(int j = 0; j < accounts.get(i).size(); j++) {
-				accountTotal.get(i).add((double) 0);
-			}
-		}
-		analyseData();
-	}
-
 	public static void analyseData() {
 		tm = TransactionManager.getInstance();
 		for(int i = 0; i < transactions.size(); i++) 
@@ -60,51 +23,36 @@ public class TransactionAnalytics extends TransactionManager{
 			int bank = t.getBankID();
 			int category = t.getCategory();
 			Calendar cal = t.getCalendar();
-//			boolean internal = t.isInternal();
-//			boolean newImport = t.isNewImport();
-//			double transID = t.getTransactionNumber();
 			double amount = t.getValueTransacted();
 			
+			int transactionWeek = cal.get(Calendar.WEEK_OF_YEAR) - 1;
+			
 			/** category totals update  */
-			updateCategory(category, amount, cal);
+			updateCategory(category, amount, transactionWeek);
 			
 			/** bankTotal update  */
 			updateBank(bank, amount);
 			
 			/** accountTotal update  */
 			updateAccount(account, bank, amount);
+			
+			/** weekly total update */
+			weeklyTotalUpdate(amount, transactionWeek);
 		}
 	}
 
-	private static void updateAccount(int account, int bank, double amount) {
-		double old = accountTotal.get(bank).get(account);
-		accountTotal.get(bank).set(account, old + amount);
-	}
-
-	private static void updateBank(int bank, double amount) {
-		double old = bankTotal.get(bank);
-		bankTotal.set(bank, old + amount);
-	}
-
-	private static void updateCategory(int category, double amount, Calendar cal) {
+	private static void weeklyTotalUpdate(double amount, int transactionWeek) {
+		double oldWeekTotal = weeklyTotal.get(transactionWeek);
+		weeklyTotal.set(transactionWeek, oldWeekTotal + amount);
 		
-		/** Set category total*/
-		double oldTotal = categoryTotal.get(category);
-		categoryTotal.set(category, oldTotal + amount);
-		
-		/** Set category weekly total*/
-		int transactionWeek = cal.get(Calendar.WEEK_OF_YEAR) - 1;
-		double oldWeekTotal = categoryWeeklyTotal.get(transactionWeek).get(category);
-		categoryWeeklyTotal.get(transactionWeek).set(category, oldWeekTotal + amount);
-		//System.out.println(category + ", " + transactionWeek + ", " +categoryWeeklyTotal.get(transactionWeek).get(category));
-	}
-
-	public static String getCategoryTotal(int category) {
-		return Double.toString(Math.abs(round(categoryTotal.get(category), 2)));
 	}
 
 	public static String getAccountTotal(int bank, int account) {
 		return Double.toString(round(accountTotal.get(bank).get(account), 2));
+	}
+
+	public static String getCategoryTotal(int category) {
+		return Double.toString(Math.abs(round(categoryTotal.get(category), 2)));
 	}
 
 	public static String[][] getWeeklyTotals() {
@@ -138,10 +86,11 @@ public class TransactionAnalytics extends TransactionManager{
 	    	 for(int j = 0; j < categories.size(); j++) {
 	    		 result[i][j+1] = "$" + Double.toString(round(categoryWeeklyTotal.get(i).get(j), 2));
 	    	 }
+	    	 result[i][categories.size() + 1] = "$" + Double.toString(round(weeklyTotal.get(i), 2));
 	     }
 		return result;
 	}
-	
+
 	public static String[] getWeeklyTotalsHeader() {
 		int headerLength = categories.size() + 2;
 		String[] result = new String[headerLength];
@@ -152,7 +101,7 @@ public class TransactionAnalytics extends TransactionManager{
 		result[headerLength-1] = "Total";
 		return result;
 	}
-	
+
 	public static double round(double value, int places) {
 	    if (places < 0) throw new IllegalArgumentException();
 
@@ -160,5 +109,76 @@ public class TransactionAnalytics extends TransactionManager{
 	    value = value * factor;
 	    long tmp = Math.round(value);
 	    return (double) tmp / factor;
+	}
+
+	public static void setupAnalytics() {
+		
+		categoryWeeklyTotal = new ArrayList<ArrayList<Double>>();
+		categoryTotal = new ArrayList<Double>();
+		weeklyTotal = new ArrayList<Double>();
+		
+		/** Initialize categoryTotal*/
+		for(int i = 0; i < categories.size(); i++) {
+			categoryTotal.add((double) 0);
+		}
+		
+		/** Initialize categoryWeeklyTotal and weeklyTotal*/
+		//Calculate the number of weeks in this year
+		Calendar cal = Calendar.getInstance();
+		cal.setFirstDayOfWeek(Calendar.MONDAY);
+		int weeksInYear = cal.getActualMaximum(Calendar.WEEK_OF_YEAR);
+		for(int i = 0; i < weeksInYear+1; i++) {
+			
+			//Add week
+			weeklyTotal.add((double) 0);
+			
+			//Add week of categories
+			categoryWeeklyTotal.add(new ArrayList<Double>());
+			for(int j = 0; j < categories.size(); j++) {
+				
+				//Add category in weekly total
+				categoryWeeklyTotal.get(i).add((double) 0);
+			}
+		}
+		
+		/** Initialize bankTotal and accountTotal*/
+		bankTotal = new ArrayList<Double>();
+		accountTotal = new ArrayList<ArrayList<Double>>();
+		for(int i = 0; i < banks.size(); i++) {
+			bankTotal.add((double) 0);
+			accountTotal.add(new ArrayList<Double>());
+			for(int j = 0; j < accounts.get(i).size(); j++) {
+				accountTotal.get(i).add((double) 0);
+			}
+		}
+		analyseData();
+	}
+
+	private static void updateAccount(int account, int bank, double amount) {
+		double old = accountTotal.get(bank).get(account);
+		accountTotal.get(bank).set(account, old + amount);
+	}
+
+	private static void updateBank(int bank, double amount) {
+		double old = bankTotal.get(bank);
+		bankTotal.set(bank, old + amount);
+	}
+	
+	private static void updateCategory(int category, double amount, int transactionWeek) {
+		
+		double oldTotal = categoryTotal.get(category);
+		double oldWeekTotal = categoryWeeklyTotal.get(transactionWeek).get(category);
+		
+		/** Set category total*/
+		categoryTotal.set(category, oldTotal + amount);
+		
+		/** Set category weekly total*/
+		categoryWeeklyTotal.get(transactionWeek).set(category, oldWeekTotal + amount);
+	}
+	
+	public TransactionAnalytics() 
+	{
+		setupAnalytics();
+		analyseData();
 	}
 }

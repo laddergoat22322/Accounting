@@ -9,6 +9,7 @@ import java.util.Date;
 public class TransactionManager {
 	
 	protected static ArrayList<ArrayList<String>> accounts;
+	protected static ArrayList<ArrayList<Double>> accountOffsets;
 	protected static ArrayList<String> banks;
 	protected static ArrayList<String> categories;
 	protected static TransactionAnalytics ta;
@@ -27,8 +28,11 @@ public class TransactionManager {
 	public static void addAccount(int bankID, String accountName) {
 		if (accounts.size() < 1) accounts.add(new ArrayList<String>());
 		if (accounts.size() <= bankID) 	accounts.add(new ArrayList<String>());
-		
 		accounts.get(bankID).add(accountName);
+		
+		if (accountOffsets.size() < 1) accountOffsets.add(new ArrayList<Double>());
+		if (accountOffsets.size() <= bankID) 	accountOffsets.add(new ArrayList<Double>());
+		accountOffsets.get(bankID).add((double) 0);
 	}
 	
 	
@@ -93,6 +97,8 @@ public class TransactionManager {
 		banks = new ArrayList<String>();
 		accounts = new ArrayList<ArrayList<String>>();
 		accounts.add(new ArrayList<String>());
+		accountOffsets = new ArrayList<ArrayList<Double>>();
+		accountOffsets.add(new ArrayList<Double>());
 		ta = new TransactionAnalytics();
 	}
 	

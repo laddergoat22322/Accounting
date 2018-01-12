@@ -3,23 +3,16 @@ package Import_Export;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.table.TableColumn;
 
-import Transactions.Transaction;
 import Transactions.TransactionManager;
-import Transactions.TransactionManager.TransactionAttribute;
 import mainGUI.ModifiableJOptionPane;
 
 public class ImportTransactionsJOptionPane extends ModifiableJOptionPane {

@@ -198,16 +198,33 @@ public class MainGUI extends GUI {
 	private void refreshCategoryTotalsPanel() {
 		categoryTotalsPanel.removeAll();
 		
-		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 2);
+		int width = 2;
+		int maxColumns = 7;
+		int numCat = TransactionManager.getNumberOfCategories();
+		if (numCat > maxColumns) {
+			width = 4;
+		}
+		
+		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, width);
 		
 		JLabel headerLabel = createLabel("Category Totals", headerFont);
 		categoryTotalsPanel.add(headerLabel, c);
-		
 		for(int i = 0; i < TransactionManager.getNumberOfCategories(); i++) {
+			if (i == 7) {
+				c.gridx++;
+				c.gridy = 1;
+			}
+			else if (i < 7) {
+				c.gridx = 0;
+				c.gridy++;
+			}
+			else if (i > 7) {
+				c.gridx--;
+				c.gridy++;
+			}
+			
 			//category
-			c.gridx = 0;
 			c.gridwidth = 1;
-			c.gridy++;
 			c.anchor = GridBagConstraints.WEST;
 			c.fill = GridBagConstraints.NONE;
 			JLabel categoryLabel = createLabel(TransactionManager.getCategory(i), mediumFont);

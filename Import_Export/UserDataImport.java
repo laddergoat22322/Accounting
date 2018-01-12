@@ -77,7 +77,7 @@ public class UserDataImport {
 					int day = Integer.parseInt(dateList.item(0).getTextContent());
 					int month = Integer.parseInt(dateList.item(1).getTextContent());
 					int year =  Integer.parseInt(dateList.item(2).getTextContent());
-					cal.set(year, month, day);
+					cal.set(year, month-1, day);
 				}
 				
 				//BankID Parse
