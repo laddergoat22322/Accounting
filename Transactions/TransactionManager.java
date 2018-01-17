@@ -9,13 +9,12 @@ import java.util.Date;
 public class TransactionManager {
 	
 	protected static ArrayList<ArrayList<String>> accounts;
-	protected static ArrayList<ArrayList<Double>> accountOffsets;
 	protected static ArrayList<String> banks;
 	protected static ArrayList<String> categories;
 	protected static TransactionAnalytics ta;
+	protected static ArrayList<Transaction> tempTransactions;
 	protected static TransactionManager tm;
 	protected static ArrayList<Transaction> transactions;
-	protected static ArrayList<Transaction> tempTransactions;
 	private static String uName;
 	
 	
@@ -29,10 +28,10 @@ public class TransactionManager {
 		if (accounts.size() < 1) accounts.add(new ArrayList<String>());
 		if (accounts.size() <= bankID) 	accounts.add(new ArrayList<String>());
 		accounts.get(bankID).add(accountName);
-		
-		if (accountOffsets.size() < 1) accountOffsets.add(new ArrayList<Double>());
-		if (accountOffsets.size() <= bankID) 	accountOffsets.add(new ArrayList<Double>());
-		accountOffsets.get(bankID).add((double) 0);
+	}
+	
+	public static void updateAccount(int bankID, int accountID, String accountName) {
+		accounts.get(bankID).set(accountID, accountName);
 	}
 	
 	
@@ -73,36 +72,18 @@ public class TransactionManager {
 	}
 	
 	
-	/**
-	 * Initializes the class {@link Transactions.TransactionManager} if not already
-	 * Initialized, keeping the usage of the class synchronized
-	 * @return Synchronized class {@linkplain Transactions.TransactionManager}
-	 */
-	public synchronized static TransactionManager getInstance() {
-		if (tm == null) {
-			setup();
-		}
-		return tm;
+	public static void addTempTransaction(Transaction t) {
+		Calendar cal = t.getCalendar();
+		int bank = t.getBankID();
+		int account = t.getAccountID();
+		int category = t.getCategory();
+		String description = t.getDescription();
+		double amount = t.getValueTransacted();
+		boolean internal = t.isInternal();
+		
+		addTransaction(amount, description, category, cal, bank, account, internal);
 	}
 
-	/**
-	 * First time setup for {@link Transactions.TransactionManager} that initialises
-	 * field variables.
-	 */
-	private static void setup() {
-		tm = new TransactionManager();
-		transactions = new ArrayList<Transaction>();
-		tempTransactions = new ArrayList<Transaction>();
-		categories = new ArrayList<String>();
-		banks = new ArrayList<String>();
-		accounts = new ArrayList<ArrayList<String>>();
-		accounts.add(new ArrayList<String>());
-		accountOffsets = new ArrayList<ArrayList<Double>>();
-		accountOffsets.add(new ArrayList<Double>());
-		ta = new TransactionAnalytics();
-	}
-	
-	
 	/**
 	 * Add a transaction to {@link #transactions}
 	 * 
@@ -132,6 +113,27 @@ public class TransactionManager {
 	}
 	
 	
+	public static void analyseData() {
+		TransactionAnalytics.setupAnalytics();
+		TransactionAnalytics.analyseData();
+	}
+	
+	
+	public static boolean checkDuplicate(double amount, String description, Calendar cal, int bankID, int accountID) {
+		for(int i = 0; i < transactions.size(); i++) {
+			Calendar localDate = transactions.get(i).getCalendar();
+			if(localDate.DAY_OF_YEAR == cal.DAY_OF_YEAR) {
+				double localAmount = transactions.get(i).getValueTransacted();
+				String localDescription = transactions.get(i).getDescription();
+				if (localAmount == amount && localDescription.equals(description)) {
+					return true;
+				}
+			}
+		}
+		return false;		
+	}
+	
+	
 	/**
 	 * Returns a list of accounts within the bank from the given bankID
 	 * 
@@ -145,6 +147,10 @@ public class TransactionManager {
 			result[i] = accounts.get(bankID).get(i);
 		}
 		return result;
+	}
+	
+	public static String getAccountTotal(int bank, int account) {
+		return TransactionAnalytics.getAccountTotal(bank, account);
 	}
 	
 	
@@ -173,29 +179,13 @@ public class TransactionManager {
 		}
 		return banks.get(bankID);
 	}
-	
-	
+
 	/**
 	 * Creates and returns an array of category names
 	 * @return All categories
 	 */
 	public static String[] getCategories() {
 		return categories.toArray(new String[categories.size()]);
-	}
-	
-	/**
-	 * Creates the header for {@link mainGUI.MainGUI} with all catgeories, date and total
-	 * @return Category header array
-	 */
-	public String[] getCategoriesHeader() {
-		int arraySize = categories.size() + 2;
-		String[] exportedCategories = new String[arraySize];
-		exportedCategories[0] = "Date";
-		for (int i = 0; i < categories.size(); i++) {
-			exportedCategories[i+1] = categories.get(i);
-		}
-		exportedCategories[arraySize-1] = "Total";
-		return exportedCategories;
 	}
 
 	/**
@@ -221,7 +211,11 @@ public class TransactionManager {
 		}
 		return 0;
 	}
-
+	
+	public static String getCategoryTotal(int category) {
+		return TransactionAnalytics.getCategoryTotal(category);
+	}
+	
 	public static String[] getIndividualTransactionHeader() {
 		String[] exportedCategories = new String[4];
 		exportedCategories[0] = "Date";
@@ -229,6 +223,18 @@ public class TransactionManager {
 		exportedCategories[2] = "Description";
 		exportedCategories[3] = "Amount";
 		return exportedCategories;
+	}
+
+	/**
+	 * Initializes the class {@link Transactions.TransactionManager} if not already
+	 * Initialized, keeping the usage of the class synchronized
+	 * @return Synchronized class {@linkplain Transactions.TransactionManager}
+	 */
+	public synchronized static TransactionManager getInstance() {
+		if (tm == null) {
+			setup();
+		}
+		return tm;
 	}
 	
 	public static String[][] getNewTransactions() {
@@ -243,49 +249,27 @@ public class TransactionManager {
 		}
 		return exportedTransactions;
 	}
-	
+
 	public static int getNumberOfBanks() {
 		return banks.size();
 	}
-
+	
 	public static int getNumberOfCategories() {
 		return categories.size();
 	}
-	
-	public double getNumberOfTransactions() {
-		return transactions.size();
-	}
 
-	public static Transaction getTransaction(int transactionIndex) {
-		return transactions.get(transactionIndex);
-	}
-	
 	public static Transaction getTempTransaction(int transactionIndex) {
 		return tempTransactions.get(transactionIndex);
 	}
 
+
+	public static Transaction getTransaction(int transactionIndex) {
+		return transactions.get(transactionIndex);
+	}
+
+
 	public static String getUserName(){
 		return TransactionManager.uName;
-	}
-
-
-	public static void setUserName(String name){
-		TransactionManager.uName = name;
-	}
-
-
-	public static void analyseData() {
-		TransactionAnalytics.setupAnalytics();
-	}
-
-
-	public static String getAccountTotal(int bank, int account) {
-		return TransactionAnalytics.getAccountTotal(bank, account);
-	}
-
-
-	public static String getCategoryTotal(int category) {
-		return TransactionAnalytics.getCategoryTotal(category);
 	}
 
 
@@ -299,19 +283,26 @@ public class TransactionManager {
 	}
 
 
-	public static boolean checkDuplicate(double amount, String description, Calendar cal, int bankID, int accountID) {
-		for(int i = 0; i < transactions.size(); i++) {
-			Calendar localDate = transactions.get(i).getCalendar();
-			if(localDate.DAY_OF_YEAR == cal.DAY_OF_YEAR) {
-				double localAmount = transactions.get(i).getValueTransacted();
-				String localDescription = transactions.get(i).getDescription();
-				if (localAmount == amount && localDescription.equals(description)) {
-					return true;
-				}
-			}
-		}
-		return false;		
+	/**
+	 * First time setup for {@link Transactions.TransactionManager} that initialises
+	 * field variables.
+	 */
+	private static void setup() {
+		tm = new TransactionManager();
+		transactions = new ArrayList<Transaction>();
+		tempTransactions = new ArrayList<Transaction>();
+		categories = new ArrayList<String>();
+		banks = new ArrayList<String>();
+		accounts = new ArrayList<ArrayList<String>>();
+		accounts.add(new ArrayList<String>());
+		ta = new TransactionAnalytics();
 	}
+
+
+	public static void setUserName(String name){
+		TransactionManager.uName = name;
+	}
+
 
 	public boolean addTempTransaction(double amount, String description, int category,
 			Calendar cal, int bank, int account, boolean internal) {
@@ -326,16 +317,28 @@ public class TransactionManager {
 		return true;
 	}
 
+	/**
+	 * Creates the header for {@link mainGUI.MainGUI} with all catgeories, date and total
+	 * @return Category header array
+	 */
+	public String[] getCategoriesHeader() {
+		int arraySize = categories.size() + 2;
+		String[] exportedCategories = new String[arraySize];
+		exportedCategories[0] = "Date";
+		for (int i = 0; i < categories.size(); i++) {
+			exportedCategories[i+1] = categories.get(i);
+		}
+		exportedCategories[arraySize-1] = "Total";
+		return exportedCategories;
+	}
 
-	public static void addTempTransaction(Transaction t) {
-		Calendar cal = t.getCalendar();
-		int bank = t.getBankID();
-		int account = t.getAccountID();
-		int category = t.getCategory();
-		String description = t.getDescription();
-		double amount = t.getValueTransacted();
-		boolean internal = t.isInternal();
+
+	public double getNumberOfTransactions() {
+		return transactions.size();
+	}
+
+	public static void updateAccountTotal(int bankID, int accountID, String amount) {
+		TransactionAnalytics.updateInitialBalance(bankID, accountID, amount);
 		
-		addTransaction(amount, description, category, cal, bank, account, internal);
 	}
 }

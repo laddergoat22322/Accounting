@@ -18,8 +18,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import Add_Remove_Components.AccountManagement;
 import Add_Remove_Components.AddAccountJOptionPane;
-import Add_Remove_Components.AddCategoryJOPtionPane;
+import Add_Remove_Components.AddCategoryJOptionPane;
 import Import_Export.ImportSelectJOptionPane;
 import Import_Export.UserDataExport;
 import Transactions.TransactionManager;
@@ -36,22 +37,16 @@ public class MainGUI extends GUI {
 		initialize();
 	}
 	
-	private void refreshAll() {
-		refreshBankTotalsPanel();
-		refreshCategoryTotalsPanel();
-		refreshWeeklyTotalsPanel();		
-	}
-
 	private void createBankTotalsPanel() {
 		bankTotalsPanel = createBorderedPanel();
 		refreshBankTotalsPanel();
 	}
-	
+
 	private void createCategoryTotalsPanel() {
 		categoryTotalsPanel = createBorderedPanel();
 		refreshCategoryTotalsPanel();
 	}
-
+	
 	private void createMenuBar() {
 		
 		JMenu fileMenu, addMenu;
@@ -76,10 +71,10 @@ public class MainGUI extends GUI {
 		fileMenu.add(newImport); fileMenu.add(save);
 		
 		addMenu = createMenu("Add/Remove", new Dimension(120, 30));
-		addAccount = createMenuItem("Add Account");
+		addAccount = createMenuItem("Manage accounts");
 		addAccount.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-			new AddAccountJOptionPane();
+			new AccountManagement();
 			refreshAll();
 		}});
 		
@@ -88,7 +83,7 @@ public class MainGUI extends GUI {
 		addCategory = createMenuItem("Add Category");
 		addCategory.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-			new AddCategoryJOPtionPane();
+			new AddCategoryJOptionPane();
 			refreshAll();
 		}});
 		
@@ -108,7 +103,7 @@ public class MainGUI extends GUI {
 		panel.add(headerLabel, c);
 		return panel;
 	}
-	
+
 	private void createWeeklyTotalsPanel() {
 		weeklyTotalsPanel = createBorderedPanel();
 		refreshWeeklyTotalsPanel();
@@ -157,6 +152,14 @@ public class MainGUI extends GUI {
 		frame.setVisible(true);
 	}
 	
+	private void refreshAll() {
+		refreshBankTotalsPanel();
+		refreshCategoryTotalsPanel();
+		refreshWeeklyTotalsPanel();
+		frame.invalidate();
+		frame.revalidate();
+	}
+	
 	private void refreshBankTotalsPanel() {
 		bankTotalsPanel.removeAll();
 		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 2);
@@ -198,29 +201,17 @@ public class MainGUI extends GUI {
 	private void refreshCategoryTotalsPanel() {
 		categoryTotalsPanel.removeAll();
 		
-		int width = 2;
-		int maxColumns = 7;
-		int numCat = TransactionManager.getNumberOfCategories();
-		if (numCat > maxColumns) {
-			width = 4;
-		}
-		
-		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, width);
+		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 2);
 		
 		JLabel headerLabel = createLabel("Category Totals", headerFont);
 		categoryTotalsPanel.add(headerLabel, c);
 		for(int i = 0; i < TransactionManager.getNumberOfCategories(); i++) {
-			if (i == 7) {
+			if (i % 2 == 0) {
+				c.gridx=0;
+				c.gridy++;
+			}
+			else {
 				c.gridx++;
-				c.gridy = 1;
-			}
-			else if (i < 7) {
-				c.gridx = 0;
-				c.gridy++;
-			}
-			else if (i > 7) {
-				c.gridx--;
-				c.gridy++;
 			}
 			
 			//category

@@ -1,12 +1,8 @@
 package Add_Remove_Components;
 
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -20,23 +16,13 @@ public class AddAccountJOptionPane extends ModifiableJOptionPane {
 
 	protected int bankID;
 	private JComboBox<String> cb1;
+	private JTextField tf;
 
 	public AddAccountJOptionPane() {
 		super();
 		displayGUI();
 	}
 	
-	@Override
-	public void displayGUI() {
-    	while (!done) {
-            int input = JOptionPane.showConfirmDialog(null,
-                    getPanel(),
-                    "New Account",
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-			checkInput(input);
-    	}
-	}
-
 	public void checkInput(int input) {
 		String text = tf.getText();
 		if(input == JOptionPane.CANCEL_OPTION || input == JOptionPane.CLOSED_OPTION) {
@@ -55,7 +41,17 @@ public class AddAccountJOptionPane extends ModifiableJOptionPane {
 			TransactionManager.analyseData();
 			done = true;
 		}
-		
+	}
+
+	@Override
+	public void displayGUI() {
+    	while (!done) {
+            int input = JOptionPane.showConfirmDialog(null,
+                    getPanel(),
+                    "New Account",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+			checkInput(input);
+    	}
 	}
 
 	public JPanel getPanel() {
@@ -76,25 +72,22 @@ public class AddAccountJOptionPane extends ModifiableJOptionPane {
 		
 		String[] banks = TransactionManager.getAllBanks();
 		cb1 = new JComboBox<String>(banks);
-		Dimension preferredSize = cb1.getPreferredSize();
-	    preferredSize.height = 30;
-	    preferredSize.width = 450;
-	    cb1.setPreferredSize(preferredSize);
+	    cb1.setPreferredSize(tfDim);
 		cb1.setFont(mediumFont);
 		c.gridx++;
 		c.anchor = GridBagConstraints.WEST;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		panel.add(cb1, c);
 		
-		JLabel fileLabel = createLabel("Account Name", mediumFont);
+		JLabel accountLabel = createLabel("Account Name", mediumFont);
 		c.gridx = 0;
 		c.gridy++;
 		c.anchor = GridBagConstraints.EAST;
 		c.fill = GridBagConstraints.NONE;
-		panel.add(fileLabel, c);
+		panel.add(accountLabel, c);
 		
 		tf = new JTextField();
-	    tf.setPreferredSize(preferredSize);
+	    tf.setPreferredSize(tfDim);
 		tf.setFont(mediumFont);
 		c.gridx++;
 		c.anchor = GridBagConstraints.WEST;

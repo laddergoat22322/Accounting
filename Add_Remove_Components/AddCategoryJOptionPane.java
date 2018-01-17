@@ -1,28 +1,26 @@
 package Add_Remove_Components;
 
-import java.awt.*;
-import javax.swing.*;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import Transactions.TransactionManager;
 import mainGUI.ModifiableJOptionPane;
 
-public class AddCategoryJOPtionPane extends ModifiableJOptionPane{
+public class AddCategoryJOptionPane extends ModifiableJOptionPane{
+	
+	private JTextField tf;
 
-	public AddCategoryJOPtionPane() {
+	public AddCategoryJOptionPane() {
 		super();
 		displayGUI();
 	}
 	
-
-	public void displayGUI() {
-    	while (!done) {
-            int input = JOptionPane.showConfirmDialog(null,
-                    getPanel(),
-                    "New Category",
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-			checkInput(input);
-    	}        
-    }
 
 	public void checkInput(int input) {
 		String text = tf.getText();
@@ -43,6 +41,16 @@ public class AddCategoryJOPtionPane extends ModifiableJOptionPane{
 		}
 	}
 
+	public void displayGUI() {
+    	while (!done) {
+            int input = JOptionPane.showConfirmDialog(null,
+                    getPanel(),
+                    "New Category",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+			checkInput(input);
+    	}        
+    }
+
 
 	public JPanel getPanel() {
     	JPanel panel = new JPanel();
@@ -62,8 +70,7 @@ public class AddCategoryJOPtionPane extends ModifiableJOptionPane{
 		panel.add(fileLabel, c);
 		
 		tf = new JTextField();
-		Dimension preferredSize = new Dimension(300, 30);
-	    tf.setPreferredSize(preferredSize);
+	    tf.setPreferredSize(tfDim);
 		tf.setFont(mediumFont);
 		c.gridx++;
 		c.anchor = GridBagConstraints.WEST;

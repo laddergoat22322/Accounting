@@ -3,7 +3,8 @@ import java.io.File;
 
 import Import_Export.UserDataImport;
 import Transactions.TransactionManager;
-import mainGUI.*;
+import mainGUI.FirstRunGUI;
+import mainGUI.MainGUI;
 
 public class Startup {
 	/**

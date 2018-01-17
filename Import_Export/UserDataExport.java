@@ -4,43 +4,66 @@
  */
 package Import_Export;
 
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Attr;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import Transactions.Transaction;
 import Transactions.TransactionManager;
 
-import java.io.File;
-
 
 @SuppressWarnings("unused")
 public class UserDataExport {
 	
-	private String fileLoc;
-	private String fileDir;
 	private Document doc;
-	private TransactionManager tm;
+	private String fileDir;
+	private String fileLoc;
 	private double numTrans;
+	private TransactionManager tm;
 	
 	public UserDataExport() {
 		setup();
 		export();
 	}
 	
-	private void setup() {
-		fileLoc = "C:/Accounting Program/Data.xml";
-		fileDir = "C:/Accounting Program";
-		tm = TransactionManager.getInstance();
-		numTrans = tm.getNumberOfTransactions();
+	private Element createElement(String name, String data) {
+        Element element = doc.createElement(name);
+        element.appendChild(doc.createTextNode(data));
+        return element;		
 	}
 
+	private Element createTransactionElement(int day, int month, int year, int bank, int account, int category,
+			double transaction, String description, double amount, boolean internal) {
+		
+				// Single Transaction element
+		         Element tran = doc.createElement("transaction");
+		         
+		         
+		         //Date element
+		         tran.appendChild(createElement("transactionID", Double.toString(transaction)));
+		         Element date = doc.createElement("date");
+		         tran.appendChild(date);
+		         date.appendChild(createElement("day"  , Integer.toString(day)));
+		         date.appendChild(createElement("month", Integer.toString(month)));
+		         date.appendChild(createElement("year" , Integer.toString(year)));
+		         
+		         tran.appendChild(createElement("bankID"     , Integer.toString(bank)));
+		         tran.appendChild(createElement("accountID"  , Integer.toString(account)));
+		         tran.appendChild(createElement("categoryID" , Integer.toString(category)));
+		         tran.appendChild(createElement("amount"     , Double.toString(amount)));
+		         tran.appendChild(createElement("internal"   , Boolean.toString(internal)));
+		         tran.appendChild(createElement("description", description));
+		         return tran;
+	}
+	
 	private void export() {
 		 try {
 	         DocumentBuilderFactory dbFactory =
@@ -127,33 +150,10 @@ public class UserDataExport {
 	      }
 	}
 	
-	private Element createElement(String name, String data) {
-        Element element = doc.createElement(name);
-        element.appendChild(doc.createTextNode(data));
-        return element;		
-	}
-	
-	private Element createTransactionElement(int day, int month, int year, int bank, int account, int category,
-			double transaction, String description, double amount, boolean internal) {
-		
-				// Single Transaction element
-		         Element tran = doc.createElement("transaction");
-		         
-		         
-		         //Date element
-		         tran.appendChild(createElement("transactionID", Double.toString(transaction)));
-		         Element date = doc.createElement("date");
-		         tran.appendChild(date);
-		         date.appendChild(createElement("day"  , Integer.toString(day)));
-		         date.appendChild(createElement("month", Integer.toString(month)));
-		         date.appendChild(createElement("year" , Integer.toString(year)));
-		         
-		         tran.appendChild(createElement("bankID"     , Integer.toString(bank)));
-		         tran.appendChild(createElement("accountID"  , Integer.toString(account)));
-		         tran.appendChild(createElement("categoryID" , Integer.toString(category)));
-		         tran.appendChild(createElement("amount"     , Double.toString(amount)));
-		         tran.appendChild(createElement("internal"   , Boolean.toString(internal)));
-		         tran.appendChild(createElement("description", description));
-		         return tran;
+	private void setup() {
+		fileLoc = "C:/Accounting Program/Data.xml";
+		fileDir = "C:/Accounting Program";
+		tm = TransactionManager.getInstance();
+		numTrans = tm.getNumberOfTransactions();
 	}
 }

@@ -20,27 +20,17 @@ import mainGUI.ModifiableJOptionPane;
 
 public class ImportSelectJOptionPane extends ModifiableJOptionPane {
 
-	private int bankID;
 	private int accountID;
-	private JComboBox<String> cb2;
+	private int bankID;
 	private JComboBox<String> cb1;
+	private JComboBox<String> cb2;
+	private JTextField tf;
 
 	public ImportSelectJOptionPane() {
 		super();
 		displayGUI();
 	}
 	
-	@Override
-	public void displayGUI() {
-    	while (!done) {
-            int input = JOptionPane.showConfirmDialog(null,
-                    getPanel(),
-                    "Import New Transactions",
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-			checkInput(input);
-    	}        
-    }
-
 	@Override
 	public void checkInput(int input) {
 		if(input == JOptionPane.CANCEL_OPTION || input == JOptionPane.CLOSED_OPTION) {
@@ -67,6 +57,17 @@ public class ImportSelectJOptionPane extends ModifiableJOptionPane {
 	}
 
 	@Override
+	public void displayGUI() {
+    	while (!done) {
+            int input = JOptionPane.showConfirmDialog(null,
+                    getPanel(),
+                    "Import New Transactions",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+			checkInput(input);
+    	}        
+    }
+
+	@Override
 	public JPanel getPanel() {
 		GridBagConstraints c = setupGridBag(GridBagConstraints.CENTER, GridBagConstraints.NONE, 3);
 		String[] accounts = TransactionManager.getAccounts(0);
@@ -85,10 +86,7 @@ public class ImportSelectJOptionPane extends ModifiableJOptionPane {
 		
 		String[] banks = TransactionManager.getAllBanks();
 		cb1 = new JComboBox<String>(banks);
-		Dimension preferredSize = cb1.getPreferredSize();
-	    preferredSize.height = 30;
-	    preferredSize.width = 450;
-	    cb1.setPreferredSize(preferredSize);
+	    cb1.setPreferredSize(tfDim);
 		cb1.setFont(mediumFont);
 		c.ipadx = 0;
 		c.gridx++;
@@ -116,7 +114,7 @@ public class ImportSelectJOptionPane extends ModifiableJOptionPane {
 		c.fill = GridBagConstraints.NONE;
 		thePanel.add(accountLabel, c);
 		
-	    cb2.setPreferredSize(preferredSize);
+	    cb2.setPreferredSize(tfDim);
 		cb2.setFont(mediumFont);
 		c.gridx++;
 		c.ipadx = 0;
@@ -133,7 +131,7 @@ public class ImportSelectJOptionPane extends ModifiableJOptionPane {
 		thePanel.add(fileLabel, c);
 		
 		tf = new JTextField();
-	    tf.setPreferredSize(preferredSize);
+	    tf.setPreferredSize(tfDim);
 		tf.setFont(mediumFont);
 		c.gridx++;
 		c.ipadx = 0;
