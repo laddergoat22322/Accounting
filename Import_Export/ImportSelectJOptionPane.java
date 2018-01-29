@@ -2,10 +2,12 @@ package Import_Export;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -13,6 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
 import Transactions.TransactionManager;
@@ -75,6 +79,7 @@ public class ImportSelectJOptionPane extends ModifiableJOptionPane {
 		
 		JLabel headerLabel = createLabel("Select Bank", largeFont);
 		JPanel thePanel = new JPanel();
+		thePanel.setLayout(new GridBagLayout());
 		thePanel.add(headerLabel, c);
 		
 		JLabel bankLabel = createLabel("Bank", mediumFont);
@@ -109,6 +114,7 @@ public class ImportSelectJOptionPane extends ModifiableJOptionPane {
 		JLabel accountLabel = createLabel("Account", mediumFont);
 		c.gridx = 0;
 		c.gridy++;
+		c.gridy = 10;
 		c.ipadx = 20;
 		c.anchor = GridBagConstraints.EAST;
 		c.fill = GridBagConstraints.NONE;
@@ -152,8 +158,28 @@ public class ImportSelectJOptionPane extends ModifiableJOptionPane {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+				JFileChooser fc = new JFileChooser();
+				FileFilter filter = new FileFilter() {
+
+				    public String getDescription() {
+				        return "Comma Delimited Files (*.csv)";
+				    }
+				 
+				    public boolean accept(File f) {
+				        if (f.isDirectory()) {
+				            return true;
+				        } else {
+				            return f.getName().toLowerCase().endsWith(".csv");
+				        }
+				    }
+					
+				};
+				fc.setFileFilter(filter);
+				Action details = fc.getActionMap().get("viewTypeDetails");
+				details.actionPerformed(null);
 				fc.setPreferredSize(new Dimension(700, 500));
+				fc.setCurrentDirectory(new File  
+						(System.getProperty("user.home") + System.getProperty("file.separator")+ "Downloads"));
 				int returnValue = fc.showOpenDialog(null);
 
 				if (returnValue == JFileChooser.APPROVE_OPTION) {

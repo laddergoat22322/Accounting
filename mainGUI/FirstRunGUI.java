@@ -44,7 +44,7 @@ public class FirstRunGUI extends GUI {
 		c.fill = GridBagConstraints.NONE;
 		thePanel.add(nameLabel, c);
 		
-		JTextField tf = new JTextField(20);
+		final JTextField tf = new JTextField(20);
 		tf.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		c.gridx++;
 		c.anchor = GridBagConstraints.WEST;
