@@ -15,14 +15,14 @@ import javax.swing.JTextField;
 import Transactions.TransactionManager;
 import mainGUI.ModifiableJOptionPane;
 
-public class AccountManagement extends ModifiableJOptionPane{
+public class AccountManagementJOptionPane extends ModifiableJOptionPane{
 	
 	private JTextField tf;
 	private JPanel panel;
 	private ArrayList<JTextField> accountTextFields;
 	private ArrayList<JTextField> amountTextFields;
 
-	public AccountManagement() {
+	public AccountManagementJOptionPane() {
 		super();
 		accountTextFields = new ArrayList<JTextField>();
 		amountTextFields = new ArrayList<JTextField>();

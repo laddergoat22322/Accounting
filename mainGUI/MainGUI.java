@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import Add_Remove_Components.AccountManagement;
+import Add_Remove_Components.AccountManagementJOptionPane;
 import Add_Remove_Components.AddAccountJOptionPane;
 import Add_Remove_Components.AddCategoryJOptionPane;
 import Import_Export.ImportSelectJOptionPane;
@@ -74,7 +74,7 @@ public class MainGUI extends GUI {
 		addAccount = createMenuItem("Manage accounts");
 		addAccount.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-			new AccountManagement();
+			new AccountManagementJOptionPane();
 			refreshAll();
 		}});
 		

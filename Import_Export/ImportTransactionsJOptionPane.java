@@ -3,6 +3,8 @@ package Import_Export;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
@@ -13,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 
+import Add_Remove_Components.AddCategoryJOptionPane;
 import Transactions.TransactionManager;
 import mainGUI.ModifiableJOptionPane;
 
@@ -53,9 +56,11 @@ public class ImportTransactionsJOptionPane extends ModifiableJOptionPane {
 				}
 			}
 		}
-		setCategories();
-		TransactionManager.analyseData();
-		done = true;
+		if (input == JOptionPane.OK_OPTION) {
+			setCategories();
+			TransactionManager.analyseData();
+			done = true;
+		}
 	}
 
 	public void displayGUI() {
@@ -80,9 +85,7 @@ public class ImportTransactionsJOptionPane extends ModifiableJOptionPane {
 		thePanel.add(headerLabel, c);
 		
 		//Initialize JComboBox
-		String[] categories = TransactionManager.getCategories();
-		JComboBox<String> combo = new JComboBox<String>(categories);
-		combo.setFont(mediumFont);
+		final JComboBox<String> combo = createCategoryCombobox();
 		
 		//Initialize JTable
 		String[][] data = TransactionManager.getNewTransactions();
@@ -118,6 +121,27 @@ public class ImportTransactionsJOptionPane extends ModifiableJOptionPane {
 		return thePanel;
     }
 	
+	private JComboBox<String> createCategoryCombobox() {
+		String[] categories = TransactionManager.getCategories();
+		final JComboBox<String> combo = new JComboBox<String>(categories);
+		combo.addItem("Add New Category");
+		combo.setFont(mediumFont);
+		combo.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String value = combo.getSelectedItem().toString();
+				if(value.equals("Add New Category")){
+					new AddCategoryJOptionPane();
+					refreshTableCategories();
+				}
+			}
+			
+		});
+		return combo;
+	}
+
+
 	private void setCategories() {
 		int numRows = table.getRowCount();
 		for(int i = 0; i < numRows; i++) {
@@ -126,6 +150,12 @@ public class ImportTransactionsJOptionPane extends ModifiableJOptionPane {
 			TransactionManager.getTempTransaction(i).setCategory(categoryIndex);
 			TransactionManager.addTempTransaction(TransactionManager.getTempTransaction(i));
 		}
+	}
+	
+	private void refreshTableCategories() {
+		final JComboBox<String> combo = createCategoryCombobox();
+		TableColumn col = table.getColumnModel().getColumn(1);
+		col.setCellEditor(new DefaultCellEditor(combo));
 	}
 
 }
